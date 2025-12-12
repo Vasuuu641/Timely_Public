@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0 # This specifies the MySQL server version Docker will use
+    env_file:
+      - .env
+    container_name: timely_mysql_db # The name of the Docker container (easy to reference)
+    restart: always # Automatically restarts the container if it crashes or the Docker daemon restarts
+    environment:
+      # THESE VARIABLES ARE CRUCIAL FOR INITIAL DATABASE & USER CREATION BY MYSQL ITSELF
+      MYSQL_ROOT_PASSWORD: _MYSQL_ROOT_PASSWORD # <<< IMPORTANT: SET A SECURE PASSWORD FOR ROOT
+      MYSQL_DATABASE: timely_db # <<< IMPORTANT: This tells MySQL to create this database on first run
+      MYSQL_USER: timely_user # <<< IMPORTANT: This tells MySQL to create this user
+      MYSQL_PASSWORD: _MYSQL_PASSWORD # <<< IMPORTANT: SET A SECURE PASSWORD FOR timely_user
+    ports:
+      - "3306:3306" # Maps your computer's port 3306 to the container's port 3306.
+                    # This lets your NestJS app (and you) connect to MySQL via localhost:3306.
+    volumes:
+      - db_data:/var/lib/mysql # Persists your database data on your computer, so it's not lost if container is removed
+    networks:
+      - backend-network # Creates a private network for Docker services to communicate
+
+volumes:
+  db_data: {} # Defines the named volume used above
+
+networks:
+  backend-network: {} # Defines the custom network

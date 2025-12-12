@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma" // Your custom output path
+}
+
+datasource db {
+  provider = "mysql" // <--- CHANGE THIS FROM "postgresql" TO "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ... (existing generator and datasource blocks) ...
+
+model User {
+  id          String          @id @default(uuid())
+  email       String          @unique
+  password    String // Store hashed passwords, NOT plain text!
+  username    String          @unique
+  fullName    String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  schedules   ScheduleEntry[]
+  todos       Todo[]          @relation("UserTodos")
+  notes       Note[]
+  quizzes     Quiz[]
+  DailyReview DailyReview[]
+  pomodoroSessions PomodoroSession[]
+
+}
+
+model ScheduleEntry {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime?
+  topic       String?   @default("General")
+  priority    String?   @default("Medium")
+  status      String?   @default("ToDo")
+  isDailyPlan Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([topic])
+}
+
+model Todo {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation("UserTodos", fields: [userId], references: [id])
+}
+
+model DailyReview {
+  id         Int      @id @default(autoincrement())
+  date       DateTime
+  reflection String
+  rating     Int?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([date, userId])
+  
+}
+
+model PomodoroSession {
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+
+  level         PomodoroLevel
+  focusStart    DateTime  // when the session began
+  focusEnd      DateTime? // when the session ended
+  breaks        Break[]   // relation to the breaks taken
+  postSessionBreak PostSessionBreak? 
+  pointsEarned  Int       @default(0)
+  isCompleted   Boolean   @default(false)
+  totalBreakMinutes Int? @default(0)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum PomodoroLevel {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Break {
+  id               Int               @id @default(autoincrement())
+  session          PomodoroSession   @relation(fields: [sessionId], references: [id])
+  sessionId        Int
+
+  startTime        DateTime
+  endTime          DateTime?
+
+  createdAt        DateTime @default(now())
+}
+
+model PostSessionBreak {
+  id          Int              @id @default(autoincrement())
+  session     PomodoroSession  @relation(fields: [sessionId], references: [id])
+  sessionId   Int              @unique
+
+  startTime   DateTime
+  endTime     DateTime?
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  title     String?
+  content   String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Quiz {
+  id          String   @id @default(uuid())
+  topic       String
+  description String?
+  options     String
+  correctAnswer String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
