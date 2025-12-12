@@ -26,14 +26,15 @@ Timely_Project/
 
 ## How to Run Locally
 
+### Frontend
+cd Timely
+npm install
+npm run dev
+
 ### Backend
 ```bash
 cd TimelyBackend
 npm install
 npm run start:dev
 
-### Frontend
-cd Timely
-npm install
-npm run dev
 
