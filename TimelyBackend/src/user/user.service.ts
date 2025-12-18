@@ -55,6 +55,12 @@ export class UserService {
     });
   }
 
+  async findUserWithPasswordByEmail(email: string): Promise<User | null>{
+    return this.prismaService.user.findUnique({
+      where: {email},
+    });
+  }
+
   async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<UserWithoutPassword>{
         if (data.password) {
           let plainPassword: string | undefined;
