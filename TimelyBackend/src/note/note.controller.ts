@@ -4,7 +4,10 @@ import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { Prisma } from 'generated/prisma';
 import { connect } from 'http2';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('note')
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}

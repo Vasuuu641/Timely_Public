@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, Query, Patch, Delete, Request, UnauthorizedException } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Query, Patch, Delete, Request, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { DailyReviewService } from "./review.service";
 import { CreateDailyReviewDto, UpdateDailyReviewDto } from "./dto/review.dto";
+import { JwtAuthGuard } from "src/authentication/jwt-auth.guard";
 
-
+@UseGuards(JwtAuthGuard)
 @Controller('review')
 export class DailyReviewController
 {
@@ -13,7 +14,6 @@ constructor(private readonly dailyReviewService : DailyReviewService) {}
 private getUserId(req: any): string {
   return req.headers['x-user-id'] || 'test-user-123'; // fallback only for dev
 }
-
 
 @Post()
 async create(@Body() dto : CreateDailyReviewDto, @Request() req : any)

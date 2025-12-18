@@ -3,7 +3,10 @@ import { UserService } from './user.service';
 import { Prisma, User } from 'generated/prisma';
 import { UserWithoutPassword } from './type/user-without-password.type';
 import { emit } from 'process';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('user') //Base path for user related API route
 export class UserController {
   constructor(private readonly userService: UserService) {}

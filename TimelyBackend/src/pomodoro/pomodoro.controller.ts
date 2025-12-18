@@ -4,7 +4,10 @@ import { EndPomodoroSessionDto } from './dto/end-pomodoro-session.dto';
 import { StartBreakDto } from './dto/start-break.dto';
 import { CreatePomodoroSessionDto } from './dto/create-pomodoro-session.dto';
 import { EndBreakDto } from './dto/end-break.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('pomodoro')
 export class PomodoroController {
 
