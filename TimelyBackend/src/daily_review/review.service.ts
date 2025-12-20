@@ -30,17 +30,14 @@ export class DailyReviewService
     getTodayReview(userId : string)
     {
 
-        const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const startOfTomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        const today = new Date().toISOString().split('T')[0];
 
         return this.prisma.dailyReview.findFirst({
             where : {
-                userId, 
+                userId,
                 date : {
-                    gte : startOfToday,
-                    lt : startOfTomorrow,
-
+                    gte : new Date(today + 'T00:00:00.000Z'),
+                    lte : new Date(today + 'T23:59:59.999Z'),
                 },
             },
         });
