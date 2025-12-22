@@ -117,137 +117,84 @@ export class PomodoroService {
     };
     }
 
-    async endPomodoroSession(dto: EndPomodoroSessionDto, userId: string) {
+   async endPomodoroSession(dto: EndPomodoroSessionDto, userId: string) {
   const { sessionId, focusEnd } = dto;
 
-  const existingSession = await this.prisma.pomodoroSession.findUnique({
-    where: { id: sessionId, userId },
+  // Fetch session and verify ownership
+  const session = await this.prisma.pomodoroSession.findUnique({
+    where: { id: sessionId },
   });
 
-  if (!existingSession || !existingSession.userId) {
+  if (!session || session.userId !== userId) {
     throw new NotFoundException('Session not found or access denied!');
   }
 
-  if (existingSession.isCompleted) {
+  if (session.isCompleted) {
     throw new BadRequestException('Session is already completed!');
   }
 
   const actualFocusEnd = focusEnd ? new Date(focusEnd) : new Date();
-  const focusStart = existingSession.focusStart;
+  const focusStart = session.focusStart;
 
-  // Level constraints config
+  // Level constraints
   const levelConstraints = {
-    EASY: {
-      requiredFocusMinutes: 30,
-      maxBreaks: Infinity,
-      maxBreakDuration: Infinity,
-      maxTotalBreakMinutes: Infinity,
-      requiredFocusStartMinutes: 5,
-      requiredFocusEndMinutes: 5,
-    },
-    MEDIUM: {
-      requiredFocusMinutes: 60,
-      maxBreaks: 4,
-      maxBreakDuration: 5,
-      maxTotalBreakMinutes: 20,
-      requiredFocusStartMinutes: 10,
-      requiredFocusEndMinutes: 10,
-    },
-    HARD: {
-      requiredFocusMinutes: 120,
-      maxBreaks: 2,
-      maxBreakDuration: 20,
-      maxTotalBreakMinutes: 40,
-      requiredFocusStartMinutes: 15,
-      requiredFocusEndMinutes: 15,
-    },
+    EASY: { requiredFocusMinutes: 30, maxBreaks: Infinity, maxBreakDuration: Infinity, maxTotalBreakMinutes: Infinity },
+    MEDIUM: { requiredFocusMinutes: 60, maxBreaks: 4, maxBreakDuration: 5, maxTotalBreakMinutes: 20 },
+    HARD: { requiredFocusMinutes: 120, maxBreaks: 2, maxBreakDuration: 20, maxTotalBreakMinutes: 40 },
   };
 
-  const constraints = levelConstraints[existingSession.level];
-  if (!constraints) {
-    throw new BadRequestException('Invalid session level!');
-  }
+  const constraints = levelConstraints[session.level];
+  if (!constraints) throw new BadRequestException('Invalid session level!');
 
-  // Fetch all breaks of this session
+  // Fetch all breaks
   const breaks = await this.prisma.break.findMany({
     where: { sessionId },
   });
 
-  // Validate breaks: count, duration, and calculate total break time
+  // Auto-end ongoing breaks
+  for (const b of breaks) {
+    if (!b.endTime) {
+      await this.prisma.break.update({
+        where: { id: b.id },
+        data: { endTime: actualFocusEnd },
+      });
+      b.endTime = actualFocusEnd;
+    }
+  }
+
+  // Calculate total break time and check violations
   let totalBreakMinutes = 0;
+  const warnings: string[] = [];
 
   for (const b of breaks) {
-    if (!b.endTime) {
-      throw new BadRequestException('All breaks must be ended before ending session.');
-    }
-    const breakDuration = (b.endTime.getTime() - b.startTime.getTime()) / 60000; // minutes
+    if (!b.endTime) continue;
+    const duration = (b.endTime.getTime() - b.startTime.getTime()) / 60000;
+    totalBreakMinutes += duration;
 
-    if (breakDuration > constraints.maxBreakDuration) {
-      throw new BadRequestException(
-        `Break longer than allowed max length for ${existingSession.level} level.`,
-      );
-    }
-    totalBreakMinutes += breakDuration;
+    if (duration > constraints.maxBreakDuration) warnings.push(`Break ${b.id} exceeded max duration`);
   }
 
-  if (breaks.length > constraints.maxBreaks) {
-    throw new BadRequestException(
-      `Too many breaks for ${existingSession.level} level.`,
-    );
-  }
+  if (breaks.length > constraints.maxBreaks) warnings.push('Too many breaks taken');
+  if (totalBreakMinutes > constraints.maxTotalBreakMinutes) warnings.push('Total break time exceeded');
 
-  if (totalBreakMinutes > constraints.maxTotalBreakMinutes) {
-    throw new BadRequestException(
-      `Total break time exceeds limit for ${existingSession.level} level.`,
-    );
-  }
+  // Calculate effective focus
+  const effectiveFocusMinutes = (actualFocusEnd.getTime() - focusStart.getTime()) / 60000 - totalBreakMinutes;
 
-  // Validate required focus periods (no breaks allowed in these windows)
-  const requiredFocusStartEnd = focusStart.getTime() + constraints.requiredFocusStartMinutes * 60000;
-  const requiredFocusEndStart = actualFocusEnd.getTime() - constraints.requiredFocusEndMinutes * 60000;
+  // Tiered compliance
+  const complianceTiers = [
+    { name: 'FULL', multiplier: 1, minFraction: 1 },
+    { name: 'PARTIAL', multiplier: 0.5, minFraction: 0.8 },
+    { name: 'MINIMUM', multiplier: 0.25, minFraction: 0.5 },
+    { name: 'FAIL', multiplier: 0, minFraction: 0 },
+  ];
 
-  for (const b of breaks) {
-    if (!b.endTime) {
-    throw new BadRequestException('All breaks must be ended before ending session.');
-    }
-    if (
-      b.startTime.getTime() < requiredFocusStartEnd &&
-      b.endTime.getTime() > focusStart.getTime()
-    ) {
-      throw new BadRequestException(
-        `Break during required focus period at start for ${existingSession.level} level.`,
-      );
-    }
-    if (
-      b.startTime.getTime() < actualFocusEnd.getTime() &&
-      b.endTime.getTime() > requiredFocusEndStart
-    ) {
-      throw new BadRequestException(
-        `Break during required focus period at end for ${existingSession.level} level.`,
-      );
-    }
-  }
+  const focusFraction = effectiveFocusMinutes / constraints.requiredFocusMinutes;
+  const tier = complianceTiers.find(t => focusFraction >= t.minFraction) || complianceTiers[complianceTiers.length - 1];
 
-  // Calculate effective focus time
-  const effectiveFocusMinutes =
-    (actualFocusEnd.getTime() - focusStart.getTime()) / 60000 - totalBreakMinutes;
+  const basePoints = { EASY: 1, MEDIUM: 2, HARD: 3 };
+  const earnedPoints = (basePoints[session.level] || 0) * tier.multiplier;
 
-  if (effectiveFocusMinutes < constraints.requiredFocusMinutes) {
-    throw new BadRequestException(
-      `Effective focus time is less than required for ${existingSession.level} level.`,
-    );
-  }
-
-  // Award points if all validations pass
-  const basePoints = {
-    EASY: 1,
-    MEDIUM: 2,
-    HARD: 3,
-  };
-
-  const earnedPoints = basePoints[existingSession.level] || 0;
-
-  // Update session as completed
+  // Update session
   const updatedSession = await this.prisma.pomodoroSession.update({
     where: { id: sessionId },
     data: {
@@ -260,10 +207,12 @@ export class PomodoroService {
   const durationInMinutes = Math.floor((actualFocusEnd.getTime() - focusStart.getTime()) / 60000);
 
   return {
-    message: 'Pomodoro session ended successfully',
+    message: 'Pomodoro session ended',
     session: updatedSession,
     duration: `${durationInMinutes} minutes`,
     points: earnedPoints,
+    complianceTier: tier.name,
+    warnings,
   };
 }
 }

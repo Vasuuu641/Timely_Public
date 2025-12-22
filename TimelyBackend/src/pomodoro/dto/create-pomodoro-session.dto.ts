@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsDateString, IsPositive } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { PomodoroLevel } from 'generated/prisma';
 
 export class CreatePomodoroSessionDto {

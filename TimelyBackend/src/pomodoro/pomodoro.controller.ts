@@ -6,6 +6,8 @@ import { CreatePomodoroSessionDto } from './dto/create-pomodoro-session.dto';
 import { EndBreakDto } from './dto/end-break.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
+import { CurrentUser } from 'src/authentication/current-user.decorator';
+import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
 
 @UseGuards(JwtAuthGuard)
 @Controller('pomodoro')
@@ -13,38 +15,28 @@ export class PomodoroController {
 
     constructor(private readonly pomodoroService : PomodoroService) {}
 
-    // Simulate getting user ID from request header (e.g., for testing)
-    private getUserId(req: any): string {
-    return req.headers['x-user-id'] || 'test-user-123'; // fallback only for dev
-    }
-
     @Post('start')
-    async createSession(@Body() dto : CreatePomodoroSessionDto, @Req() req : any)
+    async createSession(@Body() dto : CreatePomodoroSessionDto, @CurrentUser() user : UserWithoutPassword)
     {
-        const userId = this.getUserId(req);
-        return this.pomodoroService.createSession(dto, userId);
+        return this.pomodoroService.createSession(dto, user.id);
     }
 
     @Post('start-break')
-    async startBreak(@Body() dto : StartBreakDto, @Req() req : any)
+    async startBreak(@Body() dto : StartBreakDto, @CurrentUser() user : UserWithoutPassword)
     {
-        const userId = this.getUserId(req);
-        return this.pomodoroService.startBreak(dto, userId);
+        return this.pomodoroService.startBreak(dto, user.id);
     }
 
     @Post('end-break')
-    async endBreak(@Body() dto : EndBreakDto, @Req() req : any)
+    async endBreak(@Body() dto : EndBreakDto, @CurrentUser() user : UserWithoutPassword)
     {
-        const userId = this.getUserId(req);
-        return this.pomodoroService.endBreak(dto, userId);
+        return this.pomodoroService.endBreak(dto, user.id);
     }
 
     @Post('end')
-    async endSession(@Body() dto : EndPomodoroSessionDto, @Req() req : any)
+    async endSession(@Body() dto : EndPomodoroSessionDto, @CurrentUser() user : UserWithoutPassword)
     {
-        const userId = this.getUserId(req);
-        return this.pomodoroService.endPomodoroSession(dto, userId);
+        return this.pomodoroService.endPomodoroSession(dto, user.id);
     }
-
 
 }
