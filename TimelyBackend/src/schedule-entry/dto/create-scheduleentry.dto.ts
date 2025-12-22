@@ -1,10 +1,26 @@
+import { IsString, IsBoolean, IsDateString, IsOptional, Length } from 'class-validator';
 
-export class CreateScheduleEntryDto{
+export class CreateScheduleEntryDto {
+    @IsString()
+    @Length(1, 255)
     title: string;
 
+    @IsBoolean()
     isDailyPlan: boolean;
 
-    userId: string;
-    
-    startTime: string
+    @IsDateString()
+    startTime: string;
+
+    @IsOptional()
+    @IsDateString()
+    endTime?: string; // optional for future use
+
+    @IsOptional()
+    @IsString()
+    @Length(0, 500)
+    notes?: string; // optional notes field
+
+    @IsOptional()
+    @IsBoolean()
+    isRecurring?: boolean; // for future recurring schedules
 }

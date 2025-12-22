@@ -1,53 +1,66 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ScheduleEntry, Prisma } from '../../generated/prisma';
-import { CreateScheduleEntryDto } from './dto/create-scheduleentry.dto';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { title } from 'process';
-
-const scheduleSelect = {
-  title:  true,
-  description: true ,
-  topic: true,
-  isDailyPlan:true
-}
+import { CreateScheduleEntryDto } from './dto/create-scheduleentry.dto';
+import { UpdateScheduleEntryDto } from './dto/update-scheduleentry.dto';
 
 @Injectable()
 export class ScheduleEntryService {
-    constructor(private prismaService: PrismaService){}
+  constructor(private prisma: PrismaService) {}
 
-    async createScheduleEntry(data: Prisma.ScheduleEntryCreateInput){
-        return this.prismaService.scheduleEntry.create({data});
-    }
+  // CREATE
+  async createScheduleEntry(dto: CreateScheduleEntryDto, userId: string) {
+    const data = {
+      title: dto.title,
+      isDailyPlan: dto.isDailyPlan,
+      startTime: new Date(dto.startTime),
+      endTime: dto.endTime ? new Date(dto.endTime) : undefined,
+      description: dto.notes,
+      isRecurring: dto.isRecurring,
+      user: { connect: { id: userId } },
+    };
 
-    async findScheduleById(id: string){
-        return this.prismaService.scheduleEntry.findUnique({
-            where: {id},
-        })
-    }
+    return await this.prisma.scheduleEntry.create({ data });
+  }
 
-    async findAll(){
-        return this.prismaService.scheduleEntry.findMany();
-    }
+  // READ single entry with ownership check
+  async findScheduleById(id: string, userId: string) {
+    const entry = await this.prisma.scheduleEntry.findUnique({ where: { id } });
+    if (!entry) throw new NotFoundException(`Schedule entry with ID ${id} not found`);
+    if (entry.userId !== userId) throw new ForbiddenException('You do not own this schedule entry');
+    return entry;
+  }
 
-    async updateSchedule(id: string, data: Prisma.ScheduleEntryUpdateInput){
-        const schedule = this.findScheduleById(id);
-        return this.prismaService.scheduleEntry.update({
-            where: {id},
-            data: data 
-        })
-    }
+  // READ all entries for a user
+  async findAllForUser(userId: string) {
+    return await this.prisma.scheduleEntry.findMany({
+      where: { userId },
+      orderBy: { startTime: 'asc' },
+    });
+  }
 
-    async removeSchedule(id: string){
-        try {
-            return this.prismaService.scheduleEntry.delete({
-                where: {id},
-                select: scheduleSelect
-            });
-        } catch (error) {
-            if (error.code === 'P2025') {
-                throw new NotFoundException(`User with ID ${id} does not exist`);
-            }
-            throw error
-            }
-    }
+  // UPDATE
+  async updateSchedule(
+    id: string,
+    dto: UpdateScheduleEntryDto,
+    userId: string
+  ) {
+    const entry = await this.findScheduleById(id, userId); // ownership check
+
+    const data = {
+      title: dto.title,
+      isDailyPlan: dto.isDailyPlan,
+      startTime: dto.startTime ? new Date(dto.startTime) : undefined,
+      endTime: dto.endTime ? new Date(dto.endTime) : undefined,
+      description: dto.notes,
+      isRecurring: dto.isRecurring,
+    };
+
+    return await this.prisma.scheduleEntry.update({ where: { id }, data });
+  }
+
+  // DELETE
+  async removeSchedule(id: string, userId: string) {
+    const entry = await this.findScheduleById(id, userId); // ownership check
+    return await this.prisma.scheduleEntry.delete({ where: { id: entry.id } });
+  }
 }

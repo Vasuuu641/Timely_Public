@@ -1,24 +1,21 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete, Request, UnauthorizedException} from "@nestjs/common";
 import { ToDoService } from "./todo.service";
-import { CreateTodoDto, UpdateToDoDto } from "./dto/create-todo.dto";
-import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
+import { CreateTodoDto } from "./dto/create-todo.dto";
+import { UpdateToDoDto } from "./dto/update-todo.dto";
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
+import { CurrentUser } from "src/authentication/current-user.decorator";
+import { UserWithoutPassword } from "src/user/type/user-without-password.type";
 
 @UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
  constructor(private readonly todoService : ToDoService) {}
 
- // Helper method to get userId from request (adjust this to your auth)
-  private getUserId(req: any): string {
-    return req.headers['x-user-id'] || null;
-  }
-
  @Post()
- async create(@Body() dto: CreateTodoDto, @Request() req : any) 
+ async create(@Body() dto: CreateTodoDto, @CurrentUser() user: UserWithoutPassword)
  {
-    const userId = this.getUserId(req);
+    const userId = user.id;
     if(!userId)
     {
         throw new UnauthorizedException('User not authenticated!');
@@ -29,9 +26,9 @@ export class TodoController {
  }
 
  @Get()
- async findAll(@Request() req : any)
+ async findAll(@CurrentUser() user: UserWithoutPassword)
  {
-    const userId = this.getUserId(req);
+    const userId = user.id;
 
     if(!userId)
     {
@@ -42,9 +39,9 @@ export class TodoController {
  }
 
  @Get(':id')
- async findOne(@Param('id') id : string, @Request() req : any)
+ async findOne(@Param('id') id : string, @CurrentUser() user: UserWithoutPassword)
  {
-    const userId = this.getUserId(req);
+    const userId = user.id;
 
     if(!userId)
     {
@@ -56,9 +53,9 @@ export class TodoController {
  }
 
  @Patch(':id')
- async update(@Param('id') id: string, @Body() dto : UpdateToDoDto, @Request() req : any)
+ async update(@Param('id') id: string, @Body() dto : UpdateToDoDto, @CurrentUser() user: UserWithoutPassword)
  {
-    const userId = this.getUserId(req);
+    const userId = user.id;
 
     if(!userId)
     {
@@ -70,10 +67,10 @@ export class TodoController {
  }
 
  @Delete(':id')
- remove(@Param('id') id : string, @Request() req : any)
+ remove(@Param('id') id : string, @CurrentUser() user: UserWithoutPassword)
  {
 
-    const userId = this.getUserId(req);
+    const userId = user.id;
 
     if(!userId)
     {

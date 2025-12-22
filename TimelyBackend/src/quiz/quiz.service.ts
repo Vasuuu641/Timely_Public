@@ -7,57 +7,60 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class QuizService {
   constructor(private prismaService: PrismaService){}
 
-  create(createQuizDto: CreateQuizDto) {
+  async create(createQuizDto: CreateQuizDto, userId: string) {
     return this.prismaService.quiz.create({
       data: {
         topic : createQuizDto.topic,
         description: createQuizDto.description,
         options: JSON.stringify(createQuizDto.options),
         correctAnswer: createQuizDto.correctAnswer,
+        user: { connect: { id: userId } },
       },
     });
   }
 
-  findAll() {
-    return this.prismaService.quiz.findMany();
-  }
-
-  findOne(id: string) {
-    const currQuiz = this.prismaService.quiz.findUnique({
-      where: {id}
+  async getAll(userId: string) {
+     const quizzes = await this.prismaService.quiz.findMany({
+      where: { userId }, 
     });
-    if(!currQuiz){
-      throw new NotFoundException(`quiz with id ${id} not found.`)
-    }
-    return currQuiz;
+
+    return quizzes.map(q => ({ ...q, options: JSON.parse(q.options) }));
   }
 
-  update(id: string, updateQuizDto: UpdateQuizDto) {
-    const currQuiz = this.findOne(id);
-
-    //Remove userId from update data
-    const {...data} = updateQuizDto;
-
-    //Prepare a copy for Prisma Update
-    const updateData: any = {...data}
-
-    if(data.options){
-      updateData.options = JSON.stringify(data.options);
-    }
-    return this.prismaService.quiz.update({
+  async getOne(id: string, userId: string) {
+    const currQuiz = await this.prismaService.quiz.findUnique({
       where: {id},
-      data: updateData
+      select: {
+      id: true,
+      topic: true,
+      description: true,
+      options: true,
+      correctAnswer: true,
+      userId: true,  
+  },
+    });
+
+    if (!currQuiz || currQuiz.userId !== userId) {
+      throw new NotFoundException(`Quiz with ID ${id} not found.`);
+    }
+
+    return { ...currQuiz, options: JSON.parse(currQuiz.options) };
+  }
+
+  async update(id: string, updateQuizDto: UpdateQuizDto, userId: string) {
+    const currQuiz = await this.getOne(id, userId);
+
+    const updateData: any = { ...updateQuizDto };
+    if (updateData.options) updateData.options = JSON.stringify(updateData.options);
+
+    return this.prismaService.quiz.update({
+      where: { id },
+      data: updateData,
     });
   }
 
-  remove(id: string) {
-    try {
-      return this.prismaService.quiz.delete({where:{id}});
-    } catch (error) {
-      if(error.code === "P2025"){
-        throw new NotFoundException("didn't find question.")
-      }
-      throw error
-    }
+  async remove(id: string, userId: string) {
+    const currQuiz = await this.getOne(id, userId); // ensures access control
+    return this.prismaService.quiz.delete({ where: { id: currQuiz.id } });
   }
 }
