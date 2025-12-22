@@ -1,50 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, Query, UseGuards } from '@nestjs/common';
 import { NoteService } from './note.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { Prisma } from 'generated/prisma';
-import { connect } from 'http2';
-import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
+import { CurrentUser } from 'src/authentication/current-user.decorator';
+import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
 
 @UseGuards(JwtAuthGuard)
 @Controller('note')
+
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
-  private getuserId(req: any){
-    return req.headers['x-user-id'] || 'test-user-123';
-  }
-  
   @Post()
-  create(@Body() createNoteDto: Prisma.NoteCreateInput, @Req() req: any) {
-    const userId = this.getuserId(req)
-    const newNote = {
-      ...createNoteDto,
-      user: {
-        connect : {id: userId}
-      }
-    };
-    return this.noteService.create(newNote);
+  create(@Body() createNoteDto: CreateNoteDto, @CurrentUser() user: UserWithoutPassword) {
+    return this.noteService.create(createNoteDto, user.id);
   }
 
   @Get()
-  findAll() {
-    return this.noteService.findAll();
+  getAll(@CurrentUser() user: UserWithoutPassword) {
+    return this.noteService.findAll(user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.noteService.findOne(id);
+  getOne(@Param('id') id: string, @CurrentUser() user: UserWithoutPassword) {
+    return this.noteService.findOne(id, user.id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: Prisma.NoteUpdateInput) {
-    return this.noteService.update(id, updateNoteDto);
+  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto, @CurrentUser() user: UserWithoutPassword) {
+    return this.noteService.update(id, updateNoteDto, user.id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.noteService.remove(id);
+  delete(@Param('id') id: string, @CurrentUser() user: UserWithoutPassword) {
+    return this.noteService.remove(id, user.id);
   }
-}
+
+  }

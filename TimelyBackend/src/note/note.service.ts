@@ -2,47 +2,55 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from 'generated/prisma';
+
 
 @Injectable()
 export class NoteService {
-  constructor(private prismaServices: PrismaService){}
+  constructor(private prisma: PrismaService){}
 
-  async create(createNoteDto: Prisma.NoteCreateInput) {
-    return this.prismaServices.note.create({data: createNoteDto});
+  async create(createNoteDto: CreateNoteDto, userId: string) {
+    return this.prisma.note.create({
+    data:
+    {
+      ...createNoteDto,
+      user: { connect: { id: userId } },
+
+    },
+    });
   }
 
-  async findAll() {
-    return this.prismaServices.note.findMany();
+  async findAll(userId: string) {
+    return this.prisma.note.findMany({
+      where: {userId},
+      orderBy: { createdAt: 'desc' }, 
+    });
   }
 
-  findOne(id: string) {
-    try {
-        return this.prismaServices.note.findUnique({where: { id }}); 
-    } catch (error) {
-        throw new NotFoundException(`note is not present`);
-        console.log(error)
+  async findOne(id: string, userId: string) {
+    const note = await this.prisma.note.findUnique({
+      where: {id},
+    });
+
+    if (!note || note.userId !== userId) {
+      throw new NotFoundException(`Note with ID ${id} not found.`);
     }
+
+    return note;
   }
 
-  update(id: string, updateNoteDto: Prisma.NoteUpdateInput) {
-    const note = this.findOne(id);
-    return this.prismaServices.note.update({
+  async update(id: string, updateNoteDto: UpdateNoteDto, userId: string) {
+    await this.findOne(id, userId);
+    return this.prisma.note.update({
       where: {id},
       data: updateNoteDto
     })
   }
 
-  remove(id: string) {
-    try {
-        return this.prismaServices.note.delete({
-          where: {id}
-        })
-    } catch (error) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(`did not find notes.`)
-        }
-        throw error
-    };
+  async remove(id: string, userId: string) {
+   const note = await this.findOne(id, userId);
+
+    return this.prisma.note.delete({
+      where: {id: note.id},
+    });
   }
 }

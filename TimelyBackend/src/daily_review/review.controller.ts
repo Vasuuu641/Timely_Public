@@ -19,7 +19,7 @@ async create(@Body() dto : CreateDailyReviewDto, @CurrentUser() user : UserWitho
 }
 
 @Get('today')
-  async getToday(@CurrentUser() user : UserWithoutPassword)
+async getToday(@CurrentUser() user : UserWithoutPassword)
 {
   const review = await this.dailyReviewService.getTodayReview(user.id);
 
