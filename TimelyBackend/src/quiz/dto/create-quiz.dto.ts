@@ -5,7 +5,7 @@ export class CreateQuizDto {
     topic: string;
 
     @IsString()
-    description: string;
+    question: string;
 
     @IsString()
     correctAnswer: string;

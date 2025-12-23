@@ -138,7 +138,7 @@ model Note {
 model Quiz {
   id          String   @id @default(uuid())
   topic       String
-  description String?
+  question    String?
   options     String
   correctAnswer String
   createdAt   DateTime @default(now())

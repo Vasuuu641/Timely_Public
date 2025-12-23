@@ -11,7 +11,7 @@ export class QuizService {
     return this.prismaService.quiz.create({
       data: {
         topic : createQuizDto.topic,
-        description: createQuizDto.description,
+        question: createQuizDto.question,
         options: JSON.stringify(createQuizDto.options),
         correctAnswer: createQuizDto.correctAnswer,
         user: { connect: { id: userId } },
@@ -33,7 +33,7 @@ export class QuizService {
       select: {
       id: true,
       topic: true,
-      description: true,
+      question: true,
       options: true,
       correctAnswer: true,
       userId: true,  
