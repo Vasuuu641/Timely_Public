@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsDateString, IsOptional, Length } from 'class-validator';
+import { IsString, IsBoolean, IsDateString, IsOptional, Length, IsIn } from 'class-validator';
 
 export class UpdateScheduleEntryDto {
     @IsOptional()
@@ -26,4 +26,14 @@ export class UpdateScheduleEntryDto {
     @IsOptional()
     @IsBoolean()
     isRecurring?: boolean;
+
+    @IsOptional()
+    @IsString()
+    @IsIn(['High', 'Medium', 'Low'])
+    priority?: string; // optional tags field
+
+    @IsOptional()
+    @IsString()
+    @IsIn(['ToDo', 'InProgress', 'Done'])
+    status?: string; // default is ToDo in schema
 }

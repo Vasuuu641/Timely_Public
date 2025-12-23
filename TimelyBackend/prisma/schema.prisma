@@ -36,13 +36,14 @@ model User {
 model ScheduleEntry {
   id          String    @id @default(uuid())
   title       String
-  description String?
+  notes       String?
   startTime   DateTime
   endTime     DateTime?
   topic       String?   @default("General")
   priority    String?   @default("Medium")
   status      String?   @default("ToDo")
   isDailyPlan Boolean   @default(false)
+  isRecurring Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 

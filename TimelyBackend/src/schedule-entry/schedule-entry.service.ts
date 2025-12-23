@@ -14,7 +14,9 @@ export class ScheduleEntryService {
       isDailyPlan: dto.isDailyPlan,
       startTime: new Date(dto.startTime),
       endTime: dto.endTime ? new Date(dto.endTime) : undefined,
-      description: dto.notes,
+      notes: dto.notes,
+      priority: dto.priority,
+      status: dto.status,
       isRecurring: dto.isRecurring,
       user: { connect: { id: userId } },
     };
@@ -51,7 +53,9 @@ export class ScheduleEntryService {
       isDailyPlan: dto.isDailyPlan,
       startTime: dto.startTime ? new Date(dto.startTime) : undefined,
       endTime: dto.endTime ? new Date(dto.endTime) : undefined,
-      description: dto.notes,
+      notes: dto.notes,
+      priority: dto.priority,
+      status: dto.status,
       isRecurring: dto.isRecurring,
     };
 
