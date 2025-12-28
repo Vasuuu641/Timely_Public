@@ -1,16 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {User, Prisma } from '../../generated/prisma';
 import { UserWithoutPassword } from './type/user-without-password.type';
-
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from './dto/CreateUserDto';
+import { UpdateUserDto } from './dto/UpdateUserDto';
 
 // Define the selection object to exclude the password
 const userSelect = {
   id: true,
   email: true,
   username: true,
-  fullName: true,
+  fullname: true,
   createdAt: true,
   updatedAt: true,
   // Do NOT include 'password: true' here
@@ -21,15 +22,16 @@ const userSelect = {
 export class UserService {
   constructor(private prismaService: PrismaService) {}
 
-  async createUser(Data: Prisma.UserCreateInput): Promise<UserWithoutPassword>{
-    const hashedPassword = await bcrypt.hash(Data.password, 10);
+  async createUser(dto : CreateUserDto): Promise<UserWithoutPassword>{
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
     return this.prismaService.user.create({
       data: {
-        username: Data.username,
+        email: dto.email,
+        username: dto.username,
+        fullname: dto.fullname,
         password: hashedPassword,
-        email: Data.email,
-        fullName: Data.fullName
       },
+      select: userSelect
     });
   }
 
@@ -38,21 +40,14 @@ export class UserService {
   }
 
   async findUserById(id: string): Promise<UserWithoutPassword | null>{
-    const curruser =  await this.prismaService.user.findUnique({
+    const user =  await this.prismaService.user.findUnique({
       where: {id},
       select: userSelect
     });
-    if(!curruser){
+    if(!user){
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return curruser;
-  }
-
-  async findUserByEmail(email: string): Promise<UserWithoutPassword | null>{
-    return this.prismaService.user.findUnique({
-      where: {email},
-      select: userSelect
-    });
+    return user;
   }
 
   async findUserWithPasswordByEmail(email: string): Promise<User | null>{
@@ -61,38 +56,27 @@ export class UserService {
     });
   }
 
-  async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<UserWithoutPassword>{
-        if (data.password) {
-          let plainPassword: string | undefined;
-          if (typeof data.password === 'string') {
-            plainPassword = data.password;
-          } else if (typeof data.password === 'object' && 'set' in data.password) {
-            plainPassword = data.password.set;
-          }
-          if (plainPassword) {
-            const hashedPassword = await bcrypt.hash(plainPassword, 10);
-            // Assign the hashed password back in the correct format
-            if (typeof data.password === 'string') {
-              data.password = hashedPassword;
-            } else if (typeof data.password === 'object' && 'set' in data.password) {
-              data.password.set = hashedPassword;
-            }
-          }
+  async updateUser(id: string, dto: UpdateUserDto): Promise<UserWithoutPassword> {
+    const data: Prisma.UserUpdateInput = { ...dto };
+
+    if (dto.password) {
+      data.password = await bcrypt.hash(dto.password, 10);
     }
+
     try {
       return this.prismaService.user.update({
-        where: {id},
-        data: data as Prisma.UserUpdateInput,
+        where: { id },
+        data,
         select: userSelect,
       });
-    } catch (error) {
-      if(error.code === 'P2025'){ //P2025 prisma error code for record not found
-        throw new NotFoundException(`User with ID ${id} not found.`);
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`User with ID ${id} not found`);
       }
       throw error;
     }
   }
-
+  
   async deleteUser(id: string): Promise<UserWithoutPassword>{
     try {
       return this.prismaService.user.delete({
