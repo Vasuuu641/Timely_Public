@@ -1,0 +1,55 @@
+import Button from "../../components/Button/Button";
+import ProjectCard from "../../components/Card/Card";
+import {BookOpenText, TimerReset, TrendingUp, Lock} from "lucide-react";
+import {Link} from "react-router-dom";
+
+function Home() {
+  return (
+    <section id="home">
+      <h1>Timely</h1>
+      <p>Your safe, anonymous space for academic, emotional and practical support</p>
+        
+        <Link to= "/register">
+        <Button 
+        text="Get Started" 
+        variant="primary" 
+        />
+        </Link>
+
+        <Link to= "/login">
+        <Button 
+        text="I already have an account" 
+        variant="outline" 
+        />
+        </Link>
+
+        <ProjectCard
+          icon={<BookOpenText size={32} />}
+          title="Your personal study system"
+          description="A flexible setup to organize tasks, schedules, and study sessions your way."
+        />
+
+        <ProjectCard
+          icon={<TimerReset size = {32} />}
+          title="Track what matters"
+          description="Use focused, gamified timers to convert study time into real results."
+        />
+
+        <ProjectCard
+          icon={<TrendingUp size={32} />}
+          title="Turn time into progress"
+          description="See what’s done, what’s pending, and what needs attention next."
+        />
+
+        <ProjectCard
+            icon={<Lock size={40} />}
+            title="Your Privacy Matters"
+            description="Timely is a personal productivity tool. Your tasks, timers, 
+            and progress are private to you and not visible to anyone else. We do not 
+            enable user-to-user interaction or data sharing."
+            />
+    </section>
+  );
+}
+
+export default Home;
