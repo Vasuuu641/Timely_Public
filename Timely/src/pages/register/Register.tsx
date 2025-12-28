@@ -1,23 +1,42 @@
 import { useState } from 'react';
-import { registerUser } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../api/auth';
+
+interface RegisterData {
+  email: string;
+  username: string;
+  fullname: string;
+  password: string;
+}
 
 export default function Register() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setuserName] = useState('');
-  const [fullname, setFullName] = useState('');
+  const [form, setForm] = useState<RegisterData>({
+    email: '',
+    username: '',
+    fullname: '',
+    password: '',
+  });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
     try {
-      const response = await registerUser({email, name: username, password });
-      setSuccess((response as { message: string }).message || 'Account created successfully!');
+      const response = await registerUser({
+        email: form.email,
+        username: form.username,
+        fullname: form.fullname,
+        password: form.password,
+      });
+      setSuccess(response.message || 'Account created successfully!');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
@@ -31,34 +50,35 @@ export default function Register() {
       {success && <p style={{ color: 'green' }}>{success}</p>}
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-
-         <input
           type="text"
-          value={username}
-          onChange={(e) => setuserName(e.target.value)}
-          placeholder="Username"
+          name="fullname"
+          placeholder="Full Name"
+          value={form.fullname}
+          onChange={handleChange}
           required
         />
-
         <input
           type="text"
-          value={fullname}
-          onChange={(e) => setFullName(e.target.value)}
-          placeholder="Full Name"
+          name="username"
+          placeholder="Username"
+          value={form.username}
+          onChange={handleChange}
           required
         />
-
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
           placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
           required
         />
         <button type="submit">Register</button>
