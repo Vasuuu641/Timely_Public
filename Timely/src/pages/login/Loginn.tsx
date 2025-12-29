@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/auth';
+import { isTokenExpired } from '../../utils/jwt';
 
 interface LoginData {
   email: string;
@@ -15,7 +16,7 @@ export default function Login() {
   // Redirect to dashboard if token exists and is valid
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && !isTokenExpired(token)) {
       navigate('/dashboard'); // already logged in
     }
   }, [navigate]);

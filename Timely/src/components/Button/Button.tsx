@@ -1,3 +1,5 @@
+import './Button.css';
+
 type ButtonProps = {
   text: string;
   variant?: 'primary' | 'outline';

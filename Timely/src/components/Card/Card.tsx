@@ -1,15 +1,18 @@
 import type { ReactNode } from 'react';
+import "./Card.css";
 
 type ProjectCardProps = {
     icon : ReactNode;
     title : string;
     description : string;
+    variant: "mint" | "teal" | "green" | "";
+    layout: "default" | "privacy";
 };
 
-export default function ProjectCard({ icon, title, description }: ProjectCardProps) {
+export default function ProjectCard({ icon, title, description, variant, layout }: ProjectCardProps) {
     return (
-    <div className="project-card">
-      <div className="project-card__header">
+     <div className={`project-card project-card--${layout}`}>
+      <div className={`project-card__icon project-card__icon--${variant}`}>
         {icon}
       </div>
 
