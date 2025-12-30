@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/auth';
 import { isTokenExpired } from '../../utils/jwt';
+import { Mail, Timer, Lock } from 'lucide-react';
+import './Login.css';
+import FormInput from '../../components/FormInput/FormInput';
+import Button from '../../components/Button/Button';
 
 interface LoginData {
   email: string;
@@ -42,28 +46,44 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '2rem' }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <input
-          type="email"
+    <section id="login">
+      <div className = "heading-with-icon">
+        <div className="icon-box">
+          <Timer size={40} />
+        </div>
+        Timely
+      </div>
+
+      <form className = "login-form" onSubmit={handleSubmit}>
+        <h2> Welcome Back </h2>
+        <p>Sign in to access your productivity dashboard</p>
+
+        {error && <div className="login-error">{error}</div>}
+
+        <FormInput
+          label="Email"
           name="email"
+          type="email"
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          required
+          icon={<Mail size={20} />}
         />
-        <input
-          type="password"
+
+        <FormInput
+          label="Password"
           name="password"
+          type="password"
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          required
+          icon={<Lock size={20} />}
         />
-        <button type="submit">Login</button>
+
+        <Button text="Sign In" variant="signin" type="submit" />
+
+        <p>Don't have an account? <a href="/register">Sign up</a></p>
       </form>
-    </div>
+    </section>
   );
 }

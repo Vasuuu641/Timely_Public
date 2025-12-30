@@ -2,7 +2,7 @@ import './Button.css';
 
 type ButtonProps = {
   text: string;
-  variant?: 'primary' | 'outline';
+  variant?: 'primary' | 'outline' | 'signin';
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
 };
