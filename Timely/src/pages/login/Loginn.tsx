@@ -66,7 +66,7 @@ export default function Login() {
           label="Email"
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder='e.g john.doe@example.com'
           value={form.email}
           onChange={handleChange}
           icon={<Mail size={20} />}
@@ -76,7 +76,7 @@ export default function Login() {
           label="Password"
           name="password"
           type="password"
-          placeholder="Password"
+          placeholder='Enter your password'
           value={form.password}
           onChange={handleChange}
           icon={<Lock size={20} />}

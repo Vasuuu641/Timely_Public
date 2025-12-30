@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/auth';
+import { Timer, User, Mail, Lock} from 'lucide-react';
+import Button from '../../components/Button/Button';
+import FormInput from '../../components/FormInput/FormInput';
+import './Register.css';
 
 interface RegisterData {
   email: string;
@@ -44,45 +48,68 @@ export default function Register() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
+    <section id="register">
+      <div className = "register-header">
+        <div className = "heading-with-icon">
+          <div className="icon-box">
+            <Timer size={40} />
+          </div>
+          Timely
+        </div>
+      </div>
+
+      <form className = "register-form" onSubmit={handleSubmit}>
+        <h2>Create Your Account</h2>
+        <p className = "auth-subtext">Join Timely and boost your productivity</p>
+
+        {error && <div className="register-error">{error}</div>}
+        {success && <div className="register-success">{success}</div>}
+
+        <FormInput
+          label="Full Name"
           type="text"
           name="fullname"
-          placeholder="Full Name"
+          placeholder='e.g John Doe'
           value={form.fullname}
           onChange={handleChange}
           required
+          icon={<User size={20} />}
         />
-        <input
+        <FormInput
+          label="Username"
           type="text"
           name="username"
-          placeholder="Username"
+          placeholder='e.g StudyBuddy123'
           value={form.username}
           onChange={handleChange}
           required
+          icon={<User size={20} />} 
         />
-        <input
+        <FormInput
+          label="Email"
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder='e.g john.doe@example.com'
           value={form.email}
           onChange={handleChange}
           required
+          icon={<Mail size={20} />}
         />
-        <input
+        <FormInput
+          label="Password"
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder='Enter your password'
           value={form.password}
           onChange={handleChange}
           required
+          icon={<Lock size={20} />}
         />
-        <button type="submit">Register</button>
+
+        <Button text="Sign Up" variant="signin" type="submit" />
+
+        <p className = "auth-switch">Already have an account? <a href="/login">Sign in</a></p>
       </form>
-    </div>
+    </section>
   );
 }
