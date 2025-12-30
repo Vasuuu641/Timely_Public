@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #e0fbe2; /* same as your #home background */
+  font-family: 'Roboto', sans-serif;
+}
+
+
+#home {
+  background-color: #e0fbe2; 
+  width: 100%;               /* full width of viewport */
+  min-height: 100vh;          /* full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem;        /* vertical 4rem, horizontal 2rem */
+  box-sizing: border-box;  
+}
+
+.icon-box {
+width: 56px; /* match SVG width */
+  height: 54px; /* match SVG height */
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  background: #ACE1AF;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  justify-content: center;
+  align-items: center; /* centers SVG perfectly */
+}
+
+.heading-with-icon {
+  display: flex;           /* horizontal layout */
+  align-items: center;     /* vertically align icon and text */
+  gap: 1rem;               /* space between icon and text */
+  font-family: Roboto;
+  font-size: 64px;
+  line-height: normal;
+  color: #000;
+  font-weight: 500;
+  margin : 0;
+}
+
+.subheading {
+color: #000;
+font-family: Roboto;
+font-size: 35px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+margin : 0;
+margin-top: 0.5rem;
+}
+
+.button-container {
+  display: flex;            /* arrange children in a row */
+  justify-content: center;  /* center them horizontally */
+  gap: 1rem;                /* space between buttons */
+  margin-top: 2rem;         /* optional spacing from heading/subheading */
+}
+
+.cards-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap; /* optional for mobile */
+  justify-content: center;
+}
+
+.privacy-section-heading {
+  display: flex;
+  justify-content: center; /* center the privacy card */
+  margin-top: 4rem;    
+}
