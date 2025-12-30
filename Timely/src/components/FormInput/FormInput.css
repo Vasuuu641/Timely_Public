@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 /* Form Field Container */
 .form-field {
   display: flex;
@@ -5,13 +7,17 @@
   gap: 0.3rem;          /* space between label and input box */
   width: 100%;           /* allows responsive scaling if needed */
   font-family: 'Roboto', sans-serif;
+  align-items: center;
 }
 
 /* Label */
 .form-field label {
+  width: 308px;    
   font-size: 12px;       /* small, readable */
   font-weight: 500;
   color: #000;
+  font-family: Roboto;
+  align-items: left;
 }
 
 /* Input Wrapper (box around input + icon) */

@@ -14,12 +14,26 @@ html, body {
   overflow: hidden;
 }
 
+.login-form h2 {
+  margin-bottom: 0.25rem; /* reduce gap below heading */
+}
+
+.login-form p {
+  margin-top: 0;          /* kill default top margin */
+  margin-bottom: 1.5rem; /* keep spacing before inputs */
+}
+
+.login-header{
+  margin-bottom: 1.5rem;
+}
+
+
 #login {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;     /* horizontal centering */
-  justify-content: center;
+  align-items: center;
+  justify-content: center; 
 }
 
 .icon-box {
@@ -49,11 +63,39 @@ html, body {
 }
 
 .login-form {
-  width: 400px;
+  max-width: 400px;
   height: 400px;
   border-radius: 13px;
   border: 1px solid rgba(0, 0, 0, 0.20);
   background: #FFF;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  align-items: center;
+  gap: 1rem;  
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+.error-message {
+  color: red;
+  font-size: 12px;
+  text-align: center;   /* center error text */
+}
+
+.auth-subtext {
+  color: #0A5C10D1;
+}
+
+.auth-switch{
+  color: #0A5C10D1;
+}
+
+.auth-switch a {
+  color: #ACE1AF;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}

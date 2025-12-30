@@ -47,16 +47,18 @@ export default function Login() {
 
   return (
     <section id="login">
-      <div className = "heading-with-icon">
+      <div className = "login-header">
+         <div className = "heading-with-icon">
         <div className="icon-box">
           <Timer size={40} />
         </div>
         Timely
       </div>
-
+      </div>
+       
       <form className = "login-form" onSubmit={handleSubmit}>
         <h2> Welcome Back </h2>
-        <p>Sign in to access your productivity dashboard</p>
+        <p className = "auth-subtext">Sign in to access your productivity dashboard</p>
 
         {error && <div className="login-error">{error}</div>}
 
@@ -82,7 +84,7 @@ export default function Login() {
 
         <Button text="Sign In" variant="signin" type="submit" />
 
-        <p>Don't have an account? <a href="/register">Sign up</a></p>
+        <p className = "auth-switch">Don't have an account? <a href="/register">Sign up</a></p>
       </form>
     </section>
   );
