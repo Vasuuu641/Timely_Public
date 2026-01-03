@@ -1,9 +1,18 @@
+import Sidebar from "../../components/Navbar/Sidebar";
+
 const Quiz = () => {
+  const email = localStorage.getItem("userEmail") ?? undefined;
+
   return (
-    <div>
-      <h1>Quiz Page</h1>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      <Sidebar userEmail={email} />
+
+      <main style={{ flex: 1, padding: "2rem" }}>
+        <h1>Quiz</h1>
+      </main>
     </div>
   );
 };
+
 
 export default Quiz;

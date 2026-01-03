@@ -22,7 +22,7 @@ type SidebarProps = {
 // Primary sidebar items
 const primaryItems: NavItem[] = [
   { label: "Dashboard", path: "/dashboard", icon: <LayoutDashboard size={20} /> },
-  { label: "Notes", path: "/notes", icon: <NotebookPen size={20} /> },
+  { label: "Notes", path: "/note", icon: <NotebookPen size={20} /> },
   { label: "Todo", path: "/todo", icon: <SquareCheckBig size={20} /> },
   { label: "Schedule", path: "/schedule", icon: <Calendar size={20} /> },
   { label: "Pomodoro", path: "/pomodoro", icon: <TimerReset size={20} /> },
