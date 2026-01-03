@@ -1,0 +1,141 @@
+.sidebar {
+  width: 322px;
+  min-height: 100vh;
+  background: #fff;
+  border: 1px solid #ACE1AF;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+.sidebar-divider {
+  height: 1px;
+  background-color: #ACE1AF;
+  width: 100%;
+}
+
+.sidebar-brand {
+  transform: translateX(-4px);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 0.75rem;
+}
+
+.sidebar-spacer {
+  flex: 1;
+}
+
+.sidebar-divider.secondary {
+  height: 1px;
+  background-color: #ACE1AF;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  text-decoration: none;
+  color: #000;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sidebar-link:hover {
+  background-color: #d0f0c0; /* light green box on hover */
+}
+
+/* Active link (current page) */
+.sidebar-link.active {
+  background-color: #a0e08b; /* slightly darker green */
+  color: #000; /* keep text black */
+}
+
+/* Make icons inherit color */
+.sidebar-link .icon {
+  color: inherit;
+}
+
+.sidebar-nav > .sidebar-link:first-child {
+  margin-top: 0.6rem; /* adjust to your liking */
+}
+
+.sidebar-nav.secondary {
+  padding-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-left: 0.75rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #ACE1AF; /* green circle */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Logout button styling */
+.button-link {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.8rem; /* match main links */
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #e63946; /* red text */
+  transition: background 0.2s;
+}
+
+/* Hover for logout button */
+.button-link:hover {
+  background-color: #f8d6d9; /* very light red */
+}
+
+/* Icons inside logout button */
+.button-link .icon {
+  color: inherit;
+}

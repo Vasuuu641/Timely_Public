@@ -20,7 +20,9 @@ export default function Login() {
   // Redirect to dashboard if token exists and is valid
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token && !isTokenExpired(token)) {
+    const storedEmail = localStorage.getItem('userEmail');
+
+    if (token && storedEmail && !isTokenExpired(token)) {
       navigate('/dashboard'); // already logged in
     }
   }, [navigate]);
@@ -38,12 +40,16 @@ export default function Login() {
       // Store JWT token
       localStorage.setItem('token', response.access_token);
 
+      // Store email for Sidebar
+      console.log("Saving email to localStorage:", form.email);
+      localStorage.setItem('userEmail', form.email);
+
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed');
     }
-  };
+};
 
   return (
     <section id="login">
