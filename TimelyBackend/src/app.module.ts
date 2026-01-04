@@ -10,9 +10,10 @@ import { ScheduleEntryModule } from './schedule-entry/schedule-entry.module';
 import { NoteModule } from './note/note.module';
 import { QuizModule } from './quiz/quiz.module';
 import { AuthModule } from './authentication/auth.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
-  imports: [UserModule,DailyReviewModule,ToDoModule, PomodoroModule, PrismaModule, ScheduleEntryModule, NoteModule, QuizModule, AuthModule],
+  imports: [UserModule,DailyReviewModule,ToDoModule, PomodoroModule, PrismaModule, ScheduleEntryModule, NoteModule, QuizModule, AuthModule, DashboardModule],
   controllers: [AppController],
   providers: [AppService],
 })
