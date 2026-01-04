@@ -1,9 +1,12 @@
-import { PrismaService } from 'src/prisma/prisma.service';
+
 import { GoalProgressDto } from '../dto/goal-progress.dto';
 import { GoalType } from 'src/studyGoal/enums/goal-type.enum';
 import { StudyGoalResponseDto } from 'src/studyGoal/dto/study-goal-response.dto';
+import { PrismaService } from "src/prisma/prisma.service";
+import { Injectable } from '@nestjs/common';
 
 
+@Injectable()
 export class GoalProgressHelper {
   constructor(private prisma: PrismaService) {}
 
@@ -53,28 +56,37 @@ export class GoalProgressHelper {
           )._sum.pointsEarned ?? 0;
         break;
 
-        case GoalType.STUDY_HOURS:
-        current = await this.prisma.pomodoroSession.count({
-          where: {
-            userId,
-            isCompleted: true,
-            focusStart: {
-                gte: goal.startDate,
-                lte: goal.endDate,
-            },
-          },
-        });
-        break;
+      case GoalType.STUDY_HOURS: {
+       const sessions = await this.prisma.pomodoroSession.findMany({
+        where: {
+        userId,
+        isCompleted: true,
+        focusStart: {
+        gte: goal.startDate,
+        lte: goal.endDate,
+      },
+    },
+    select: {
+      focusStart: true,
+      focusEnd: true,
+    },
+  });
 
-        default:
-           throw new Error(`Unhandled goal type: ${goal.type}`);
+  const totalMinutes = sessions.reduce((sum, s) => {
+    if (!s.focusEnd) return sum;
+    return sum + (s.focusEnd.getTime() - s.focusStart.getTime()) / 60000;
+  }, 0);
 
-    }
+  current = Math.floor(totalMinutes / 60);
+  break;
+}
+  default: 
+  throw new Error(`Unhandled goal type: ${goal.type}`);
+}
+    const progressPercent = goal.target
+  ? Math.min(Math.round((current / goal.target) * 100), 100)
+  : 0;
 
-    const progressPercent = Math.min(
-      Math.round((current / goal.target) * 100),
-      100,
-    );
 
     return {
       id: goal.id,
@@ -82,8 +94,10 @@ export class GoalProgressHelper {
       target: goal.target,
       current,
       progressPercent,
+      notes: goal.notes,
       startDate: goal.startDate,
       endDate: goal.endDate,
     };
   }
 }
+

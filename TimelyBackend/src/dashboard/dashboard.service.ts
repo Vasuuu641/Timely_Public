@@ -5,10 +5,14 @@ import { DashboardStatsDto } from "./dto/dashboard-stats.dto";
 import { UpcomingTaskDto } from "./dto/upcoming-tasks.dto";
 import { RecentActivityDto } from "./dto/recent-activity.dto";
 import { ActivityType } from "./enums/activity-type.enum";
+import { GoalProgressDto } from "./dto/goal-progress.dto";
+import { StudyGoalResponseDto } from "src/studyGoal/dto/study-goal-response.dto";
+import { GoalType } from "src/studyGoal/enums/goal-type.enum";
+import { GoalProgressHelper } from "./helpers/completeGoalProgess";
 
 @Injectable()
 export class DashboardService {
-    constructor(private prisma:PrismaService){}
+    constructor(private prisma:PrismaService, private goalProgressHelper: GoalProgressHelper){}
 
     async getDashboardData(userId:string):Promise<DashboardResponseDto>{
         const [notesCreated, tasksCompleted, studyHours, pomodoroPoints] = await Promise.all([
@@ -117,11 +121,34 @@ export class DashboardService {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, 5);
 
+      const goals = await this.prisma.studyGoal.findMany({
+  where: { userId },
+});
+
+const goalsWithProgress = await Promise.all(
+  goals.map(goal => {
+    const goalDto: StudyGoalResponseDto = {
+      id: goal.id,
+      type: goal.type as GoalType,
+      target: goal.target,
+      notes: goal.notes, // include notes
+      progress: 0, // temporary, helper will compute actual
+      startDate: goal.startDate,
+      endDate: goal.endDate,
+      createdAt: goal.createdAt,
+      updatedAt: goal.updatedAt,
+    };
+    return this.goalProgressHelper.computeGoalProgress(goalDto, userId);
+  })
+);
+
+
     // 4️⃣ Return full dashboard
     return {
       stats,
       upcomingTasks,
       recentActivity,
+      goals: goalsWithProgress
     };
-    }
   }
+}

@@ -6,6 +6,7 @@ export class GoalProgressDto {
   target: number;
   current: number;
   progressPercent: number;
+  notes: string;
   startDate: Date;
   endDate: Date;
 }

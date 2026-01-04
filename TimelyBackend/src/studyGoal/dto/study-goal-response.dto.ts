@@ -5,6 +5,7 @@ export class StudyGoalResponseDto {
   type: GoalType;
   target: number;
   progress: number; 
+  notes: string;
   startDate: Date;
   endDate: Date;
   createdAt: Date;
