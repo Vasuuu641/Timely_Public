@@ -17,20 +17,20 @@ datasource db {
 // ... (existing generator and datasource blocks) ...
 
 model User {
-  id          String          @id @default(uuid())
-  email       String          @unique
-  password    String // Store hashed passwords, NOT plain text!
-  username    String          @unique
-  fullname    String?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  schedules   ScheduleEntry[]
-  todos       Todo[]          @relation("UserTodos")
-  notes       Note[]
-  quizzes     Quiz[]
-  DailyReview DailyReview[]
+  id               String            @id @default(uuid())
+  email            String            @unique
+  password         String // Store hashed passwords, NOT plain text!
+  username         String            @unique
+  fullname         String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  schedules        ScheduleEntry[]
+  todos            Todo[]            @relation("UserTodos")
+  notes            Note[]
+  quizzes          Quiz[]
+  DailyReview      DailyReview[]
   pomodoroSessions PomodoroSession[]
-
+  studyGoals       StudyGoal[]
 }
 
 model ScheduleEntry {
@@ -76,25 +76,24 @@ model DailyReview {
   user   User   @relation(fields: [userId], references: [id])
 
   @@unique([date, userId])
-  
 }
 
 model PomodoroSession {
-  id            Int       @id @default(autoincrement())
-  user          User      @relation(fields: [userId], references: [id])
-  userId        String
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  level         PomodoroLevel
-  focusStart    DateTime  // when the session began
-  focusEnd      DateTime? // when the session ended
-  breaks        Break[]   // relation to the breaks taken
-  postSessionBreak PostSessionBreak? 
-  pointsEarned  Int       @default(0)
-  isCompleted   Boolean   @default(false)
-  totalBreakMinutes Int? @default(0)
+  level             PomodoroLevel
+  focusStart        DateTime // when the session began
+  focusEnd          DateTime? // when the session ended
+  breaks            Break[] // relation to the breaks taken
+  postSessionBreak  PostSessionBreak?
+  pointsEarned      Int               @default(0)
+  isCompleted       Boolean           @default(false)
+  totalBreakMinutes Int?              @default(0)
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum PomodoroLevel {
@@ -104,23 +103,23 @@ enum PomodoroLevel {
 }
 
 model Break {
-  id               Int               @id @default(autoincrement())
-  session          PomodoroSession   @relation(fields: [sessionId], references: [id])
-  sessionId        Int
+  id        Int             @id @default(autoincrement())
+  session   PomodoroSession @relation(fields: [sessionId], references: [id])
+  sessionId Int
 
-  startTime        DateTime
-  endTime          DateTime?
+  startTime DateTime
+  endTime   DateTime?
 
-  createdAt        DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model PostSessionBreak {
-  id          Int              @id @default(autoincrement())
-  session     PomodoroSession  @relation(fields: [sessionId], references: [id])
-  sessionId   Int              @unique
+  id        Int             @id @default(autoincrement())
+  session   PomodoroSession @relation(fields: [sessionId], references: [id])
+  sessionId Int             @unique
 
-  startTime   DateTime
-  endTime     DateTime?
+  startTime DateTime
+  endTime   DateTime?
 }
 
 model Note {
@@ -137,16 +136,36 @@ model Note {
 }
 
 model Quiz {
-  id          String   @id @default(uuid())
-  topic       String
-  question    String?
-  options     String
+  id            String   @id @default(uuid())
+  topic         String
+  question      String?
+  options       String
   correctAnswer String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+enum GoalType {
+  NOTE
+  TASK
+  POMODORO
+  STUDY_HOURS
+}
+
+model StudyGoal {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      GoalType
+  target    Int // target number of tasks, points, notes, etc.
+  notes     String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

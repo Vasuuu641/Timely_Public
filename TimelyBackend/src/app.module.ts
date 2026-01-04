@@ -11,9 +11,10 @@ import { NoteModule } from './note/note.module';
 import { QuizModule } from './quiz/quiz.module';
 import { AuthModule } from './authentication/auth.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { StudyGoalModule } from './studyGoal/studyGoal.module';
 
 @Module({
-  imports: [UserModule,DailyReviewModule,ToDoModule, PomodoroModule, PrismaModule, ScheduleEntryModule, NoteModule, QuizModule, AuthModule, DashboardModule],
+  imports: [UserModule,DailyReviewModule,ToDoModule, PomodoroModule, PrismaModule, ScheduleEntryModule, NoteModule, QuizModule, AuthModule, DashboardModule, StudyGoalModule],
   controllers: [AppController],
   providers: [AppService],
 })
