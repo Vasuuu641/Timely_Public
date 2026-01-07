@@ -6,11 +6,12 @@ import { CurrentUser } from 'src/authentication/current-user.decorator';
 import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
+import { FeatureUsageService, FeatureName } from 'src/feature-usage/featureUsage.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('schedules')
 export class ScheduleEntryController {
-  constructor(private readonly scheduleEntryService: ScheduleEntryService) {}
+  constructor(private readonly scheduleEntryService: ScheduleEntryService, private readonly featureUsageService: FeatureUsageService) {}
 
   // CREATE
   @Post()
@@ -24,6 +25,11 @@ export class ScheduleEntryController {
   // GET all schedules for the user
   @Get()
   async findAll(@CurrentUser() user: UserWithoutPassword) {
+
+    await this.featureUsageService.trackUsage(
+      user.id, 
+      FeatureName.SCHEDULE,
+    )
     return await this.scheduleEntryService.findAllForUser(user.id);
   }
 

@@ -31,6 +31,7 @@ model User {
   DailyReview      DailyReview[]
   pomodoroSessions PomodoroSession[]
   studyGoals       StudyGoal[]
+  featureUsage     FeatureUsage[]
 }
 
 model ScheduleEntry {
@@ -168,4 +169,16 @@ model StudyGoal {
   endDate   DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model FeatureUsage {
+  id         String   @id @default(uuid())
+  userId     String
+  feature    String
+  usageCount Int      @default(0)
+  lastUsed   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, feature])
 }

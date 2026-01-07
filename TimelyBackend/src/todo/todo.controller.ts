@@ -6,11 +6,12 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CurrentUser } from "src/authentication/current-user.decorator";
 import { UserWithoutPassword } from "src/user/type/user-without-password.type";
+import { FeatureUsageService, FeatureName } from "src/feature-usage/featureUsage.service";
 
 @UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
- constructor(private readonly todoService : ToDoService) {}
+ constructor(private readonly todoService : ToDoService, private readonly featureUsageService:FeatureUsageService) {}
 
  @Post()
  async create(@Body() dto: CreateTodoDto, @CurrentUser() user: UserWithoutPassword)
@@ -28,6 +29,11 @@ export class TodoController {
  @Get()
  async findAll(@CurrentUser() user: UserWithoutPassword)
  {
+    await this.featureUsageService.trackUsage(
+        user.id,
+        FeatureName.TODO
+    )
+    
     const userId = user.id;
 
     if(!userId)

@@ -5,12 +5,13 @@ import { UpdateNoteDto } from './dto/update-note.dto';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CurrentUser } from 'src/authentication/current-user.decorator';
 import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
+import { FeatureUsageService, FeatureName } from 'src/feature-usage/featureUsage.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('note')
 
 export class NoteController {
-  constructor(private readonly noteService: NoteService) {}
+  constructor(private readonly noteService: NoteService, private readonly featureUsageService: FeatureUsageService) {}
 
   @Post()
   create(@Body() createNoteDto: CreateNoteDto, @CurrentUser() user: UserWithoutPassword) {
@@ -18,7 +19,11 @@ export class NoteController {
   }
 
   @Get()
-  getAll(@CurrentUser() user: UserWithoutPassword) {
+  async getAll(@CurrentUser() user: UserWithoutPassword) {
+    await this.featureUsageService.trackUsage(
+    user.id,
+    FeatureName.NOTES,
+  );
     return this.noteService.findAll(user.id);
   }
 

@@ -8,16 +8,22 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CurrentUser } from 'src/authentication/current-user.decorator';
 import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
+import { FeatureUsageService, FeatureName } from 'src/feature-usage/featureUsage.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('pomodoro')
 export class PomodoroController {
 
-    constructor(private readonly pomodoroService : PomodoroService) {}
+    constructor(private readonly pomodoroService : PomodoroService, private readonly featureUsageService : FeatureUsageService) {}
 
     @Post('start')
     async createSession(@Body() dto : CreatePomodoroSessionDto, @CurrentUser() user : UserWithoutPassword)
     {
+        await this.featureUsageService.trackUsage(
+            user.id, 
+            FeatureName.POMODORO,
+        )
+        
         return this.pomodoroService.createSession(dto, user.id);
     }
 
