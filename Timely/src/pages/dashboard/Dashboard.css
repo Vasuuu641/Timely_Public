@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+
+.dashboard-stats-row {
+  display: flex;
+  gap: 61px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  align-items: flex-start;
+}
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-content {
+  padding-left: 133px;
+  padding-top: 32px; /* optional, usually needed */
+  flex: 1;
+}
+
+.dashboard-content h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 40px;  /* adjust as needed */
+  font-weight: 700;
+  color: #111827;   /* dark gray/black, adjust if you want */
+  margin-bottom: 8px; /* spacing from paragraph */
+}
+
+.dashboard-content p {
+  font-family: 'Inter', sans-serif; /* or whatever you prefer for body text */
+  font-size: 16px;  /* adjust if needed */
+  color: #0A5C10D1;   /* green shade */
+  margin-top: 0;
+}
+

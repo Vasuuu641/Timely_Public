@@ -1,0 +1,34 @@
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 7px;
+  box-sizing: border-box;
+  display: inline-flex;
+}
+
+/* Figma sizes */
+.dashboard-card--small {
+  width: 280px;   /* slightly larger */
+  height: 120px;  /* must be fixed */
+  padding: 16px;
+  position: relative;  /* required for absolute children */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card--small:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* shadow appears on hover */
+  transform: translateY(-2px); /* optional slight lift */
+}
+
+.dashboard-card--medium {
+  width: 317px;
+  height: 352px;
+  padding: 16px;
+}
+
+.dashboard-card--large {
+  width: 607px;
+  height: 352px;
+  padding: 16px;
+}

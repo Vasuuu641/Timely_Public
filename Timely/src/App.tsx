@@ -10,6 +10,7 @@ import Review from './pages/review/Review';
 import Schedule from './pages/schedule/Schedule';
 import Quiz from './pages/quiz/Quiz';
 import Note from './pages/note/Note';
+import Goal from './pages/goals/Goal';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path="/schedule" element={<Schedule />} />
       <Route path="/quiz" element={<Quiz />} />
       <Route path="/note" element={<Note />} />
+      <Route path="/goal" element={<Goal />} />
     </Routes>
   );
 }
