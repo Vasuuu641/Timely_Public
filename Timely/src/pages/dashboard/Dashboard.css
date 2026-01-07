@@ -35,3 +35,8 @@
   margin-top: 0;
 }
 
+.dashboard-actions-row {
+  margin-top: 33px; /* exact space between stats row and actions card */
+  display: flex;
+  justify-content:left;
+}

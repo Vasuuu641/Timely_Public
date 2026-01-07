@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { fetchCurrentUser } from "../../api/user";
 import { NotebookPen, Timer, SquareCheckBig, Medal} from "lucide-react";
 import {StatsCard} from "../../components/Dashboard_Cards/StatsCard";
-import { fetchDashboardData, type DashboardStats } from "../../api/dashboard";
+import { fetchDashboardData, type DashboardStats, type FeatureName } from "../../api/dashboard";
+import { QuickActionsCard } from "../../components/Dashboard_Cards/ActionsCard";
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [quickActions, setQuickActions] = useState<FeatureName[]>([]);
   const email = localStorage.getItem("userEmail") ?? undefined;
   
 
@@ -19,7 +21,10 @@ const Dashboard = () => {
     .catch(err => console.error(err));
 
     fetchDashboardData()
-    .then(data => setStats(data.stats))
+    .then(data => {
+      setStats(data.stats);
+      setQuickActions(data.quickActions); 
+    })
     .catch(err => console.error(err));
   }, []);
 
@@ -37,7 +42,8 @@ const Dashboard = () => {
         )}
 
         {stats ? (
-          <div className="dashboard-stats-row">
+          <div className = "dashboard-main-row">
+            <div className="dashboard-stats-row">
           <StatsCard
            title="Notes Created"
            value={stats.notesCreated}
@@ -63,6 +69,12 @@ const Dashboard = () => {
           />
 
           </div>
+
+          <div className="dashboard-actions-row">
+             <QuickActionsCard Actions={quickActions} />
+          </div>
+          </div>
+          
         ) : (
           <p>Loading dashboard...</p>
         )}

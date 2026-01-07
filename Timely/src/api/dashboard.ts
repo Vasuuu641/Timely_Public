@@ -42,7 +42,11 @@ export interface DashboardResponse {
   upcomingTasks: UpcomingTask[];
   recentActivity: RecentActivity[];
   goals: GoalProgress[];
+  quickActions: FeatureName[];
 }
+
+export type FeatureName = "NOTES" | "TODO" | "POMODORO" | "SCHEDULE" | "QUIZ" | "GOALS";
+
 
 export const fetchDashboardData = async (): Promise<DashboardResponse> => {
   try {
