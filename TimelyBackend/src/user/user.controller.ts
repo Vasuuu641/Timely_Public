@@ -6,6 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { UpdateUserDto } from './dto/UpdateUserDto';
+import { CurrentUser } from 'src/authentication/current-user.decorator';
 
 @Controller('user') //Base path for user related API route
 export class UserController {
@@ -30,6 +31,12 @@ async create(@Body() dto: CreateUserDto) {
   @Get()
   async findAll(): Promise<UserWithoutPassword[]> {
     return this.userService.findAllUser();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getMe(@CurrentUser() user: UserWithoutPassword): UserWithoutPassword {
+    return user;
   }
 
   @Get(':id')

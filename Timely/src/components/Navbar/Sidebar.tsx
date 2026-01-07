@@ -2,7 +2,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
-import {LayoutDashboard,NotebookPen,SquareCheckBig,Calendar,TimerReset,Brain,Star,LogOut,Timer,} from "lucide-react";
+import {LayoutDashboard,NotebookPen,SquareCheckBig,Calendar,TimerReset,Brain,Star,LogOut,Timer, Goal} from "lucide-react";
 import './Sidebar.css';
 import { getInitials } from "../../utils/initial";
 
@@ -28,6 +28,7 @@ const primaryItems: NavItem[] = [
   { label: "Pomodoro", path: "/pomodoro", icon: <TimerReset size={20} /> },
   { label: "Quiz", path: "/quiz", icon: <Brain size={20} /> },
   { label: "Daily Review", path: "/review", icon: <Star size={20} /> },
+  { label: "Goals", path: "/goal", icon: <Goal size={20} />},
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ items = primaryItems, userEmail }) => {

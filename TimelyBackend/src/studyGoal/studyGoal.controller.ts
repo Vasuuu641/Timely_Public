@@ -5,11 +5,12 @@ import { UpdateGoalDto } from './dto/update-study-goal.dto';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CurrentUser } from 'src/authentication/current-user.decorator';
 import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
+import { FeatureUsageService, FeatureName } from 'src/feature-usage/featureUsage.service';
 
 @Controller('study-goals')
 @UseGuards(JwtAuthGuard) // Protect all routes with JWT auth
 export class StudyGoalController {
-  constructor(private readonly studyGoalService: StudyGoalService) {}
+  constructor(private readonly studyGoalService: StudyGoalService, private readonly featureUsageService : FeatureUsageService) {}
 
   // Create a goal
   @Post()
@@ -22,6 +23,10 @@ export class StudyGoalController {
   // Get all goals for the current user
   @Get()
   async findAll(@CurrentUser() user: UserWithoutPassword) {
+    await this.featureUsageService.trackUsage(
+      user.id, 
+      FeatureName.GOALS,
+    )
     return this.studyGoalService.getStudyGoals(user.id);
   }
 

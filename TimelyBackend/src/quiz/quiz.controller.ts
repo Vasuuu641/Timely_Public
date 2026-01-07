@@ -6,14 +6,19 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CurrentUser } from 'src/authentication/current-user.decorator';
 import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
+import { FeatureUsageService, FeatureName } from 'src/feature-usage/featureUsage.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('quiz')
 export class QuizController {
-  constructor(private readonly quizService: QuizService) {}
+  constructor(private readonly quizService: QuizService, private readonly featureUsageService: FeatureUsageService) {}
 
   @Post()
-  create(@Body() createQuizDto: CreateQuizDto, @CurrentUser() user: UserWithoutPassword) {
+  async create(@Body() createQuizDto: CreateQuizDto, @CurrentUser() user: UserWithoutPassword) {
+    await this.featureUsageService.trackUsage(
+      user.id, 
+      FeatureName.QUIZ,
+    )
     return this.quizService.create(createQuizDto, user.id);
   }
 

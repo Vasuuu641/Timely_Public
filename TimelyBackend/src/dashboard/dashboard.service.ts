@@ -5,14 +5,14 @@ import { DashboardStatsDto } from "./dto/dashboard-stats.dto";
 import { UpcomingTaskDto } from "./dto/upcoming-tasks.dto";
 import { RecentActivityDto } from "./dto/recent-activity.dto";
 import { ActivityType } from "./enums/activity-type.enum";
-import { GoalProgressDto } from "./dto/goal-progress.dto";
 import { StudyGoalResponseDto } from "src/studyGoal/dto/study-goal-response.dto";
 import { GoalType } from "src/studyGoal/enums/goal-type.enum";
 import { GoalProgressHelper } from "./helpers/completeGoalProgess";
+import { FeatureUsageService, FeatureName } from "src/feature-usage/featureUsage.service";
 
 @Injectable()
 export class DashboardService {
-    constructor(private prisma:PrismaService, private goalProgressHelper: GoalProgressHelper){}
+    constructor(private prisma:PrismaService, private goalProgressHelper: GoalProgressHelper, private featureUsageService : FeatureUsageService){}
 
     async getDashboardData(userId:string):Promise<DashboardResponseDto>{
         const [notesCreated, tasksCompleted, studyHours, pomodoroPoints] = await Promise.all([
@@ -142,13 +142,27 @@ const goalsWithProgress = await Promise.all(
   })
 );
 
+const topFeatures = await this.featureUsageService.getTopFeatures(userId, 4);
+
+const fallbackFeatures: FeatureName[] = [
+  FeatureName.NOTES,
+  FeatureName.TODO,
+  FeatureName.POMODORO,
+  FeatureName.GOALS,
+];
+
+const quickActions: FeatureName[]=
+  topFeatures.length > 0
+    ? topFeatures.map(f => f.feature as FeatureName)
+    : fallbackFeatures;
 
     // 4️⃣ Return full dashboard
     return {
       stats,
       upcomingTasks,
       recentActivity,
-      goals: goalsWithProgress
+      goals: goalsWithProgress,
+      quickActions: quickActions,
     };
   }
 }

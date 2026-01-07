@@ -1,0 +1,62 @@
+.stats-card {
+  width: 280px;
+  height: 120px;
+  min-width: 240px;
+  max-width: 280px;
+
+  background: #ffffff;
+  border-radius: 7px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stats-card__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.stats-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Top-left heading */
+.stats-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0;
+}
+
+.stats-bottom-row {
+  display: flex;
+  justify-content: space-between; /* number left, icon right */
+  align-items: center;            /* vertically center in bottom row */
+}
+
+/* Number */
+.stats-value {
+  font-size: 45px; /* largest element */
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Icon/logo */
+.stats-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;      /* bigger icon now */
+  height: 55px;
+  border-radius: 8px;
+  background: #ACE1AF;
+  color: #0A5C10D1;
+  font-size: 40px;  /* scales the icon */
+}
