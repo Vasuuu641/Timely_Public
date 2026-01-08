@@ -32,11 +32,23 @@ export class DashboardService {
             pomodoroPoints
         };
 
-        const upcomingTasks: UpcomingTaskDto[] = await this.prisma.todo.findMany({
-            where:{userId, isCompleted:false},
-            orderBy:{createdAt:'asc'},
-            take:5,
-            select:{id:true, title:true, createdAt:true}
+     const upcomingTasks: UpcomingTaskDto[] = await this.prisma.todo.findMany({
+             where: {
+             userId,
+             isCompleted: false,
+            },
+            orderBy: [
+           { dueDate: "asc" },
+           { priority: "asc" },
+           { createdAt: "asc" },
+           ],
+            take: 5,
+            select: {
+            id: true,
+            title: true,
+            dueDate: true,
+            priority: true,
+           },
         });
 
       const recentNotes = this.prisma.note.findMany({

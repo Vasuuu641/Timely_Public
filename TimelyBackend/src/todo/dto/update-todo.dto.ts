@@ -1,4 +1,10 @@
-import { IsString, IsOptional, IsBoolean } from "class-validator";
+import { IsString, IsOptional, IsBoolean, IsDateString, IsEnum } from "class-validator";
+
+export enum TodoPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+}
 
 export class UpdateToDoDto {
     @IsOptional()
@@ -13,4 +19,12 @@ export class UpdateToDoDto {
     @IsBoolean()
     isCompleted?: boolean;
 
+    @IsOptional()
+    @IsDateString()
+    dueDate?: string;
+    
+    @IsOptional()
+    @IsEnum(TodoPriority)
+    priority?: TodoPriority;
+    
 }
