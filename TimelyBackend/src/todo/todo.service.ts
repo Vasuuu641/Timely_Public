@@ -3,7 +3,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { CreateTodoDto } from "./dto/create-todo.dto";
 import { UpdateToDoDto } from "./dto/update-todo.dto";
 
-
 @Injectable() 
 
 export class ToDoService
@@ -11,11 +10,13 @@ export class ToDoService
     constructor(private prisma : PrismaService) {}
 
 create(dto: CreateTodoDto, userId : string) {
-const { title, description} = dto;
+const { title, description, dueDate, priority} = dto;
 return this.prisma.todo.create({
 data: {
     title,
     description,
+    dueDate: dueDate? new Date(dueDate): undefined,
+    priority,
     user: {
     connect: { id: userId }, // this connects the Todo to the existing User
           },
@@ -33,14 +34,14 @@ findAll(userId : string)
 
 findOne(id : number, userId : string)
 {
-    return this.prisma.todo.findUnique({
+    return this.prisma.todo.findFirst({
         where: {id, userId},
     })
 }
 
 update(id : number, dto : UpdateToDoDto, userId : string)
 {
-    return this.prisma.todo.update({
+    return this.prisma.todo.updateMany({
         where : {id, userId},
         data : dto,
     });
@@ -48,7 +49,7 @@ update(id : number, dto : UpdateToDoDto, userId : string)
 
 remove(id : number, userId: string)
 {
-    return this.prisma.todo.delete({
+    return this.prisma.todo.deleteMany({
         where : {id, userId},
     });
 }

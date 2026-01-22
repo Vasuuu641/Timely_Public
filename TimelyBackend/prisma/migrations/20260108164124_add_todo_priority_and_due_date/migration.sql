@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Todo` ADD COLUMN `dueDate` DATETIME(3) NULL,
+    ADD COLUMN `priority` ENUM('LOW', 'MEDIUM', 'HIGH') NOT NULL DEFAULT 'MEDIUM';
