@@ -32,24 +32,18 @@ export class DashboardService {
             pomodoroPoints
         };
 
-     const upcomingTasks: UpcomingTaskDto[] = await this.prisma.todo.findMany({
-             where: {
-             userId,
-             isCompleted: false,
-            },
-            orderBy: [
-           { dueDate: "asc" },
-           { priority: "asc" },
-           { createdAt: "asc" },
-           ],
-            take: 5,
-            select: {
-            id: true,
-            title: true,
-            dueDate: true,
-            priority: true,
-           },
-        });
+     const tasksWithDueDate = await this.prisma.todo.findMany({
+     where: { userId, isCompleted: false, dueDate: { not: null } },
+     orderBy: { dueDate: "asc" },
+     take: 5,
+     });
+
+    const tasksWithoutDueDate = await this.prisma.todo.findMany({
+      where: { userId, isCompleted: false, dueDate: null },
+      orderBy: { createdAt: "asc" },
+      take: 5,
+    });
+
 
       const recentNotes = this.prisma.note.findMany({
       where: { userId },
@@ -171,7 +165,12 @@ const quickActions: FeatureName[]=
     // 4️⃣ Return full dashboard
     return {
       stats,
-      upcomingTasks,
+      upcomingTasks: [...tasksWithDueDate, ...tasksWithoutDueDate].slice(0,5).map(task => ({
+        id: task.id,
+        title: task.title,
+        dueDate: task.dueDate,
+        priority: task.priority,
+      })),
       recentActivity,
       goals: goalsWithProgress,
       quickActions: quickActions,
