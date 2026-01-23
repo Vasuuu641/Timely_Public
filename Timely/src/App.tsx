@@ -11,6 +11,7 @@ import Schedule from './pages/schedule/Schedule';
 import Quiz from './pages/quiz/Quiz';
 import Note from './pages/note/Note';
 import Goal from './pages/goals/Goal';
+import './index.css';
 
 function App() {
   return (

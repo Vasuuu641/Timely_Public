@@ -109,8 +109,9 @@ font-weight: 500;
   width: 360px;
   height: 31px;
   border-radius: 5px;
+  border: #3C6E3C;
   background: #FFF;
-  color: 000000;
+  color: #000000;
   font-size: 14px;
 }
 
