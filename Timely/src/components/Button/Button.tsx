@@ -2,7 +2,7 @@ import './Button.css';
 
 type ButtonProps = {
   text: string;
-  variant?: 'primary' | 'outline' | 'signin' | 'quick-action';
+  variant?: 'primary' | 'outline' | 'signin' | 'quick-action' | 'view-all-tasks';
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   icon?: React.ReactNode;     

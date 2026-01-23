@@ -1,0 +1,41 @@
+.upcoming-tasks-card {
+  width: 432px;
+  height: 450px;
+  background: #fff;
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.upcoming-tasks-header {
+  padding: 16px 16px 8px;
+  gap: 6px;
+}
+
+.upcoming-tasks-header h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.upcoming-tasks-body {
+  flex: 1;
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.upcoming-tasks p{
+  color: #4CAF50;
+  font-size: 16px;
+  margin: 0;
+}
+
+.upcoming-tasks-footer {
+  padding: 8px 16px 16px;
+  display: flex;
+  justify-content: center;
+}

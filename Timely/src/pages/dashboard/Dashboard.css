@@ -39,4 +39,8 @@
   margin-top: 33px; /* exact space between stats row and actions card */
   display: flex;
   justify-content:left;
+  display: flex;
+  flex-direction: row;
+  gap: 68px; /* spacing between cards */
+  align-items: flex-start; /* align top edges */
 }

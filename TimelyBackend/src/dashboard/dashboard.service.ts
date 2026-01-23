@@ -35,13 +35,13 @@ export class DashboardService {
      const tasksWithDueDate = await this.prisma.todo.findMany({
      where: { userId, isCompleted: false, dueDate: { not: null } },
      orderBy: { dueDate: "asc" },
-     take: 5,
+     take: 4,
      });
 
     const tasksWithoutDueDate = await this.prisma.todo.findMany({
       where: { userId, isCompleted: false, dueDate: null },
       orderBy: { createdAt: "asc" },
-      take: 5,
+      take: 4,
     });
 
 
