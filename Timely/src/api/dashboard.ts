@@ -14,7 +14,8 @@ export interface DashboardStats {
 export interface UpcomingTask {
   id: number | string;
   title: string;
-  dueDate: Date; // ISO string
+  dueDate: Date | null; 
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 export type ActivityType = 'NOTE' | 'TASK' | 'QUIZ' | 'REVIEW' | 'POMODORO' | 'SCHEDULE';
 
@@ -49,6 +50,8 @@ export type FeatureName = "NOTES" | "TODO" | "POMODORO" | "SCHEDULE" | "QUIZ" | 
 
 
 export const fetchDashboardData = async (): Promise<DashboardResponse> => {
+  console.log("Dashboard component rendered");
+
   try {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('No auth token found!');
@@ -57,14 +60,34 @@ export const fetchDashboardData = async (): Promise<DashboardResponse> => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    // Convert date strings to Date objects for frontend usage
+    // This log will tell you the raw format of dueDate
+    console.log("RAW dueDates:", response.data.upcomingTasks.map(t => t.dueDate));
+
     const dashboardData = response.data;
+
+    const parseDate = (value: any): Date => {
+      if (!value) return new Date(0);
+
+      if (typeof value === "string") {
+        return new Date(value);
+      }
+
+      if (typeof value === "number") {
+        // seconds vs milliseconds
+        if (value < 1e12) return new Date(value * 1000);
+        return new Date(value);
+      }
+
+      return new Date(value);
+    };
 
     return {
       ...dashboardData,
-      upcomingTasks: dashboardData.upcomingTasks.map(task => ({
+      upcomingTasks: dashboardData.upcomingTasks
+      .filter(task => task.dueDate !== null)
+      .map(task => ({
         ...task,
-        dueDate: new Date(task.dueDate),
+        dueDate: parseDate((task as any).dueDate),
       })),
       recentActivity: dashboardData.recentActivity.map(act => ({
         ...act,

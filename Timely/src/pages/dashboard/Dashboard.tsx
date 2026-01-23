@@ -6,24 +6,32 @@ import { NotebookPen, Timer, SquareCheckBig, Medal} from "lucide-react";
 import {StatsCard} from "../../components/Dashboard_Cards/StatsCard";
 import { fetchDashboardData, type DashboardStats, type FeatureName } from "../../api/dashboard";
 import { QuickActionsCard } from "../../components/Dashboard_Cards/ActionsCard";
+import { UpcomingTasksCard } from "../../components/Dashboard_Cards/TaskCard";
+import type { UpcomingTask } from "../../api/dashboard";
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [quickActions, setQuickActions] = useState<FeatureName[]>([]);
+  const [UpcomingTask, setUpcomingTask] = useState<UpcomingTask[]>([]);
   const email = localStorage.getItem("userEmail") ?? undefined;
   
 
   useEffect(() =>{
+    console.log("Dashboard useEffect fired"); 
+
     fetchCurrentUser()
     .then(user => setUsername(user.username))
     .catch(err => console.error(err));
 
     fetchDashboardData()
     .then(data => {
+      console.log("Dashboard data:", data);
+
       setStats(data.stats);
       setQuickActions(data.quickActions); 
+      setUpcomingTask(data.upcomingTasks);
     })
     .catch(err => console.error(err));
   }, []);
@@ -72,7 +80,14 @@ const Dashboard = () => {
 
           <div className="dashboard-actions-row">
              <QuickActionsCard Actions={quickActions} />
+
+            <UpcomingTasksCard tasks = {UpcomingTask}
+
+            
+            />
+          
           </div>
+
           </div>
           
         ) : (
