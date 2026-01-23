@@ -26,17 +26,20 @@ export interface RecentActivity {
   createdAt: Date;
 }
 
+export type GoalType = 'NOTE' | 'TASK' | 'POMODORO' | 'STUDY_HOURS';
 export interface GoalProgress {
   id: string;
-  type: string; // GoalType as string
+  type: string;
   target: number;
   notes?: string;
-  progress: number;
-  startDate: string;
-  endDate: string;
-  createdAt: string;
-  updatedAt: string;
+  current: number;
+  progressPercent: number;
+  startDate: Date;
+  endDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
 
 export interface DashboardResponse {
   stats: DashboardStats;
@@ -50,7 +53,7 @@ export type FeatureName = "NOTES" | "TODO" | "POMODORO" | "SCHEDULE" | "QUIZ" | 
 
 
 export const fetchDashboardData = async (): Promise<DashboardResponse> => {
-  console.log("Dashboard component rendered");
+  
 
   try {
     const token = localStorage.getItem('token');
@@ -59,9 +62,6 @@ export const fetchDashboardData = async (): Promise<DashboardResponse> => {
     const response = await axios.get<DashboardResponse>(`${API_URL}/dashboard`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-
-    // This log will tell you the raw format of dueDate
-    console.log("RAW dueDates:", response.data.upcomingTasks.map(t => t.dueDate));
 
     const dashboardData = response.data;
 
@@ -81,6 +81,14 @@ export const fetchDashboardData = async (): Promise<DashboardResponse> => {
       return new Date(value);
     };
 
+    const parsedGoals: GoalProgress[] = dashboardData.goals.map(goal => ({ 
+      ...goal,
+      startDate: parseDate((goal as any).startDate),
+      endDate: parseDate((goal as any).endDate),
+      createdAt: parseDate((goal as any).createdAt),
+      updatedAt: parseDate((goal as any).updatedAt),
+    }));
+
     return {
       ...dashboardData,
       upcomingTasks: dashboardData.upcomingTasks
@@ -93,6 +101,7 @@ export const fetchDashboardData = async (): Promise<DashboardResponse> => {
         ...act,
         createdAt: new Date(act.createdAt),
       })),
+      goals: parsedGoals,
     };
   } catch (error: any) {
     throw error.response?.data || error;
