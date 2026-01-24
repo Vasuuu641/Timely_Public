@@ -49,4 +49,8 @@
 
 .dashboard-goals-inline {
   margin-top: 41px;
+  gap: 68px;
+  display: flex;
+  align-items: flex-start;
+
 }

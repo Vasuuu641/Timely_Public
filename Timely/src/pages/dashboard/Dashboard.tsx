@@ -7,7 +7,8 @@ import { fetchDashboardData, type DashboardStats, type FeatureName } from "../..
 import { QuickActionsCard } from "../../components/Dashboard_Cards/ActionsCard";
 import { UpcomingTasksCard } from "../../components/Dashboard_Cards/TaskCard";
 import type { UpcomingTask } from "../../api/dashboard";
-import type { GoalProgress } from "../../api/dashboard";
+import type { GoalProgress, RecentActivity } from "../../api/dashboard";
+import { RecentActivityCard } from "../../components/Dashboard_Cards/RecentActivity";
 import { GoalsCard } from "../../components/Dashboard_Cards/GoalsCard";
 import './Dashboard.css';
 
@@ -17,6 +18,7 @@ const Dashboard = () => {
   const [quickActions, setQuickActions] = useState<FeatureName[]>([]);
   const [UpcomingTask, setUpcomingTask] = useState<UpcomingTask[]>([]);
   const [goals, setGoals] = useState<GoalProgress[]>([]);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const email = localStorage.getItem("userEmail") ?? undefined;
 
   useEffect(() => {
@@ -30,6 +32,7 @@ const Dashboard = () => {
         setQuickActions(data.quickActions);
         setUpcomingTask(data.upcomingTasks);
         setGoals(data.goals);
+        setRecentActivity(data.recentActivity);
       })
       .catch(err => console.error(err));
   }, []);
@@ -63,8 +66,8 @@ const Dashboard = () => {
 
             <div className="dashboard-goals-inline">
               <GoalsCard goals={goals} />
+              <RecentActivityCard activities={recentActivity} />
             </div>
-
           </div>
         ) : (
           <p>Loading dashboard...</p>
