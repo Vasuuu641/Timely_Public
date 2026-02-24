@@ -16,7 +16,7 @@ export class CreateNoteDto
   @IsString({ each: true })
   tags?: string[];
 
-  @IsOptional()
   @IsString()
-  date?: string;
+  @Length(1, 255)
+  category: string; 
 }

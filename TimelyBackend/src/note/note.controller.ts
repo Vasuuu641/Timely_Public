@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Patch, Delete, Query, UseGuards } f
 import { NoteService } from './note.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
+import { SearchNotesDto } from './dto/search-notes.dto';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CurrentUser } from 'src/authentication/current-user.decorator';
 import { UserWithoutPassword } from 'src/user/type/user-without-password.type';
@@ -26,6 +27,22 @@ export class NoteController {
   );
     return this.noteService.findAll(user.id);
   }
+
+  @Get('search')
+searchNotes(
+  @Query() query: SearchNotesDto,
+  @CurrentUser() user: UserWithoutPassword,
+) {
+  return this.noteService.searchNotes(user.id, {
+    ...query,
+    tags: query.tags
+      ? Array.isArray(query.tags)
+        ? query.tags
+        : (query.tags as string).split(',')
+      : undefined,
+  });
+
+}
 
   @Get(':id')
   getOne(@Param('id') id: string, @CurrentUser() user: UserWithoutPassword) {

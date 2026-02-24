@@ -62,14 +62,14 @@ enum TodoPriority {
 }
 
 model Todo {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   description String?
   dueDate     DateTime?
-  priority    TodoPriority  @default(MEDIUM)
-  isCompleted Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  priority    TodoPriority @default(MEDIUM)
+  isCompleted Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   userId String
   user   User   @relation("UserTodos", fields: [userId], references: [id])
@@ -131,17 +131,46 @@ model PostSessionBreak {
   endTime   DateTime?
 }
 
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  notes Note[]
+}
+
 model Note {
-  id        String   @id @default(uuid())
-  title     String?
-  content   String   @db.LongText
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id      String @id @default(uuid())
+  title   String
+  content String @db.LongText
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  tags NoteTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
+  @@index([userId, categoryId])
+}
+
+model Tag {
+  id    String    @id @default(cuid())
+  name  String    @unique
+  notes NoteTag[]
+}
+
+model NoteTag {
+  noteId String
+  tagId  String
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
 }
 
 model Quiz {

@@ -12,9 +12,10 @@ import { QuizModule } from './quiz/quiz.module';
 import { AuthModule } from './authentication/auth.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { StudyGoalModule } from './studyGoal/studyGoal.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [UserModule,DailyReviewModule,ToDoModule, PomodoroModule, PrismaModule, ScheduleEntryModule, NoteModule, QuizModule, AuthModule, DashboardModule, StudyGoalModule],
+  imports: [UserModule,DailyReviewModule,ToDoModule, PomodoroModule, PrismaModule, ScheduleEntryModule, NoteModule, QuizModule, AuthModule, DashboardModule, StudyGoalModule, CategoryModule],
   controllers: [AppController],
   providers: [AppService],
 })
