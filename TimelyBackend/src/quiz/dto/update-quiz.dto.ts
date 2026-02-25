@@ -5,12 +5,14 @@ import {
   IsString,
   IsArray,
   ArrayMinSize,
-  IsInt,
-  Min,
 } from 'class-validator';
 
 export class UpdateQuizDto extends PartialType(CreateQuizDto) 
 {
+  @IsOptional()
+  @IsString()
+  title?: string;
+
   @IsOptional()
   @IsString()
   question?: string;
@@ -21,8 +23,7 @@ export class UpdateQuizDto extends PartialType(CreateQuizDto)
   options?: string[];
 
   @IsOptional()
-  @IsInt()
-  @Min(0)
+  @IsString()
   correctAnswer?: string;
 
   @IsOptional()

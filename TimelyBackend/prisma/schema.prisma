@@ -175,9 +175,10 @@ model NoteTag {
 
 model Quiz {
   id            String   @id @default(uuid())
+  title         String
   topic         String
-  question      String?
-  options       String
+  question      String   @db.Text
+  options       String   @db.Text
   correctAnswer String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -186,6 +187,7 @@ model Quiz {
   user   User?   @relation(fields: [userId], references: [id])
 
   @@index([userId])
+  @@index([title])
 }
 
 enum GoalType {

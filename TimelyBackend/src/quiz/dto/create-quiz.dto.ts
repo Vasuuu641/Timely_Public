@@ -2,6 +2,9 @@ import { ArrayNotEmpty, IsArray, IsString } from "class-validator";
 
 export class CreateQuizDto {
     @IsString()
+    title: string;
+
+    @IsString()
     topic: string;
 
     @IsString()

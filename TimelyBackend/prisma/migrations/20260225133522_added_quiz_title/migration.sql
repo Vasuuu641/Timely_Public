@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Quiz` ALTER COLUMN `title` DROP DEFAULT;

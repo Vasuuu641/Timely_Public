@@ -10,6 +10,7 @@ export class QuizService {
   async create(createQuizDto: CreateQuizDto, userId: string) {
     return this.prismaService.quiz.create({
       data: {
+        title: createQuizDto.title,
         topic : createQuizDto.topic,
         question: createQuizDto.question,
         options: JSON.stringify(createQuizDto.options),
