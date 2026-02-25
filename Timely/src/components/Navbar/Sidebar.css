@@ -1,10 +1,7 @@
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  
   width: 322px;
-  height: 100vh;
+  flex-shrink: 0;
+  min-height: 100vh;
   overflow-y: auto;
   background: #fff;
   border: 1px solid #ACE1AF;
