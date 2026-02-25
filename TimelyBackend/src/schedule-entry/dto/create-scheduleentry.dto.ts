@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsDateString, IsOptional, Length, IsIn } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, Length, IsIn, Matches } from 'class-validator';
 
 export class CreateScheduleEntryDto {
     @IsString()
@@ -8,12 +8,19 @@ export class CreateScheduleEntryDto {
     @IsBoolean()
     isDailyPlan: boolean;
 
-    @IsDateString()
+    @IsString()
+    @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/, { message: 'startTime must be a valid datetime string' })
     startTime: string;
 
     @IsOptional()
-    @IsDateString()
+    @IsString()
+    @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?/, { message: 'endTime must be a valid datetime string' })
     endTime?: string; // optional for future use
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 100)
+    topic?: string; // optional topic/category field
 
     @IsOptional()
     @IsString()
