@@ -119,8 +119,10 @@
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  min-width: 0;
 }
 
 .note-modal-header {
@@ -129,6 +131,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .note-modal-title {
@@ -159,6 +162,8 @@
 
 .note-modal-body {
   padding: 24px;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .note-form {
@@ -190,6 +195,7 @@
   font-size: 14px;
   font-family: 'Inter', sans-serif;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .note-form-input:focus,
