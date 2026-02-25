@@ -35,12 +35,11 @@ export class PomodoroService {
         const {sessionId} = dto;
         const existingSession = await this.prisma.pomodoroSession.findUnique({
             where : {
-                id : sessionId, 
-                userId : userId
+                id : sessionId
             },
         });
 
-        if(!existingSession || !existingSession.userId)
+        if(!existingSession || existingSession.userId !== userId)
         {
             throw new NotFoundException('Session not found or access denied!');
         }
@@ -49,12 +48,13 @@ export class PomodoroService {
         const existingBreak = await this.prisma.break.findFirst({
             where : {
                 sessionId : sessionId,
+                endTime : null,
             },
         });
 
         if(existingBreak)
         {
-            throw new BadRequestException('Break already exists for this session!');
+            throw new BadRequestException('An ongoing break already exists for this session!');
         }
 
         const newBreak = await this.prisma.break.create({
@@ -93,7 +93,7 @@ export class PomodoroService {
             throw new NotFoundException('Break not found');
         }
 
-        if(!existingBreak.session.userId || !userId)
+        if(existingBreak.session.userId !== userId)
         {
             throw new BadRequestException('Access Denied!');
         }
@@ -191,7 +191,7 @@ export class PomodoroService {
   const focusFraction = effectiveFocusMinutes / constraints.requiredFocusMinutes;
   const tier = complianceTiers.find(t => focusFraction >= t.minFraction) || complianceTiers[complianceTiers.length - 1];
 
-  const basePoints = { EASY: 1, MEDIUM: 2, HARD: 3 };
+  const basePoints = { EASY: 10, MEDIUM: 25, HARD: 50 };
   const earnedPoints = (basePoints[session.level] || 0) * tier.multiplier;
 
   // Update session

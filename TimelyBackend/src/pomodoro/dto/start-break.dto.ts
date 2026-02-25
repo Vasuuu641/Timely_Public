@@ -1,8 +1,8 @@
-import {IsInt, IsOptional, IsPositive, IsDateString } from 'class-validator';
+import {IsInt, IsOptional, IsDateString, Min } from 'class-validator';
 
 export class StartBreakDto {
     @IsInt()
-    @IsPositive()
+    @Min(1)
     sessionId : number;
 
     @IsOptional()
