@@ -55,7 +55,7 @@ const Dashboard = () => {
             <div className="dashboard-stats-row">
               <StatsCard title="Notes Created" value={stats.notesCreated} icon={<NotebookPen size={24} />} />
               <StatsCard title="Tasks Completed" value={stats.tasksCompleted} icon={<SquareCheckBig size={24} />} />
-              <StatsCard title="Study Hours" value={stats.studyHours} icon={<Timer size={24} />} />
+              <StatsCard title="Study Sessions" value={stats.studyHours} icon={<Timer size={24} />} />
               <StatsCard title="Pomodoro Points" value={stats.pomodoroPoints} icon={<Medal size={24} />} />
             </div>
 

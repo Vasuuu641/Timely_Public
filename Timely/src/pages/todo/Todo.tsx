@@ -75,6 +75,7 @@ const Todo = () => {
     try {
       await updateTodo(todo.id, { isCompleted: !todo.isCompleted });
       await loadTodos();
+      window.dispatchEvent(new Event("goals:refresh"));
     } catch (error) {
       console.error("Failed to update todo:", error);
     }

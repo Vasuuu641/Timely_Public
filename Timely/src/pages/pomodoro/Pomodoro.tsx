@@ -219,6 +219,7 @@ const Pomodoro = () => {
         setPointsEarned(result.points);
         setTotalPoints((prev) => prev + result.points);
         setCurrentStreak((prev) => prev + 1);
+        window.dispatchEvent(new Event("goals:refresh"));
       }
 
       // Reset for next session
