@@ -12,7 +12,10 @@ export class GoalProgressHelper {
 
  async computeGoalProgress(goal: StudyGoalResponseDto, userId: string): Promise<GoalProgressDto> {
   const startDate = new Date(goal.startDate);
+  startDate.setHours(0, 0, 0, 0);
+
   const endDate = new Date(goal.endDate);
+  endDate.setHours(23, 59, 59, 999);
 
   let current = 0;
 
