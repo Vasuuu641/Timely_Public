@@ -5,6 +5,7 @@ import {
   startBreak,
   endBreak,
   endPomodoroSession,
+  getTodayStats,
   type PomodoroLevel,
   type PomodoroSession,
   type Break,
@@ -68,6 +69,11 @@ const Pomodoro = () => {
       try {
         setLoading(true);
         setError(null);
+        // Fetch today's stats
+        const todayStats = await getTodayStats();
+        setCurrentStreak(todayStats.sessionsCompleted);
+        setPointsEarned(todayStats.pointsToday);
+        
         // Auto-start with EASY difficulty
         const newSession = await createPomodoroSession("EASY");
         setSession(newSession);
@@ -218,7 +224,13 @@ const Pomodoro = () => {
         const result = await endPomodoroSession(session.id);
         setPointsEarned(result.points);
         setTotalPoints((prev) => prev + result.points);
-        setCurrentStreak((prev) => prev + 1);
+        
+        // Refresh today's stats from backend
+        const todayStats = await getTodayStats();
+        setSessionsCompleted(todayStats.sessionsCompleted);
+        setCurrentStreak(todayStats.sessionsCompleted);
+        setPointsEarned(todayStats.pointsToday);
+        
         window.dispatchEvent(new Event("goals:refresh"));
       }
 

@@ -1,0 +1,382 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+/* Main Container */
+.review-container {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 2rem 4rem 2rem;
+  overflow-y: auto;
+  background: #E0FBE2;
+}
+
+.review-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-header > div {
+  flex: 1;
+}
+
+.review-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.review-header p {
+  font-size: 1rem;
+  color: #0A5C10;
+  margin: 0.25rem 0;
+}
+
+.review-date {
+  font-size: 0.95rem;
+  color: #666;
+  margin-top: 0.5rem !important;
+}
+
+.history-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.history-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Card Styling */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+/* Summary Section */
+.summary-section {
+  margin-bottom: 2rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.summary-card {
+  background: #F0F9FF;
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #E0FBE2;
+}
+
+.summary-card:hover {
+  background: #E0FBE2;
+  transform: translateY(-2px);
+}
+
+.summary-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0A5C10;
+  margin-bottom: 0.25rem;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Review Grid */
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mood Section */
+.mood-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.mood-section h2 {
+  margin-bottom: 1.25rem;
+}
+
+.mood-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mood-btn {
+  padding: 1rem;
+  border: 2px solid #D1FAE5;
+  background: #F3F4F6;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.mood-btn:hover {
+  background: #E0FBE2;
+  border-color: #ACE1AF;
+}
+
+.mood-btn.active {
+  background: #ACE1AF;
+  border-color: #8bcf96;
+  color: #1a5c2a;
+  font-weight: 600;
+}
+
+/* Reflection Section */
+.reflection-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.reflection-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+}
+
+.reflection-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s ease;
+  min-height: 180px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.reflection-textarea:focus {
+  outline: none;
+  border-color: #ACE1AF;
+  box-shadow: 0 0 0 3px rgba(172, 225, 175, 0.1);
+}
+
+.save-review-btn {
+  background: #ACE1AF;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #1a5c2a;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.save-review-btn:hover:not(:disabled) {
+  background: #8bcf96;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.save-review-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Goals Section */
+.goals-section {
+  grid-column: 1 / -1;
+}
+
+.goals-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 1.25rem 0;
+}
+
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.goal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-label {
+  font-weight: 600;
+  color: #111827;
+}
+
+.goal-target {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.goal-progress-bar {
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.goal-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ACE1AF, #8bcf96);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Tasks Sections */
+.tasks-section,
+.pending-section {
+  grid-column: 1 / -1;
+}
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.task-item {
+  padding: 1rem;
+  background: #F9FAFB;
+  border-left: 4px solid #ACE1AF;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.task-title {
+  font-weight: 500;
+  color: #111827;
+}
+
+.task-time {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.task-priority {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-high {
+  background: #FEE2E2;
+  color: #991b1b;
+}
+
+.priority-medium {
+  background: #D1FAE5;
+  color: #065f46;
+}
+
+.priority-low {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.placeholder-text {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Error Message */
+.error-message {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .review-container {
+    padding: 1rem 1rem 2rem 1rem;
+  }
+
+  .review-header h1 {
+    font-size: 2rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+}

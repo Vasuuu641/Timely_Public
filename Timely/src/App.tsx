@@ -7,6 +7,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Todo from './pages/todo/Todo';
 import Pomodoro from './pages/pomodoro/Pomodoro';
 import Review from './pages/review/Review';
+import ReviewHistory from './pages/review/ReviewHistory';
 import Schedule from './pages/schedule/Schedule';
 import Quiz from './pages/quiz/Quiz';
 import Note from './pages/note/Note';
@@ -23,6 +24,7 @@ function App() {
       <Route path="/todo" element={<Todo />} />
       <Route path="/pomodoro" element={<Pomodoro />} />
       <Route path="/review" element={<Review />} />
+      <Route path="/review/history" element={<ReviewHistory />} />
       <Route path="/schedule" element={<Schedule />} />
       <Route path="/quiz" element={<Quiz />} />
       <Route path="/note" element={<Note />} />

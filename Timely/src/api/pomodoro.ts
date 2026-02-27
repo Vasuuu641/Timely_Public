@@ -46,6 +46,11 @@ export interface EndSessionResponse {
   warnings: string[];
 }
 
+export interface TodayStatsResponse {
+  pointsToday: number;
+  sessionsCompleted: number;
+}
+
 const getAuthToken = () => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -113,6 +118,17 @@ export const endPomodoroSession = async (
     const response = await axios.post<EndSessionResponse>(
       `${API_URL}/end`,
       { sessionId },
+      getAxiosConfig()
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data || error;
+  }
+};
+export const getTodayStats = async (): Promise<TodayStatsResponse> => {
+  try {
+    const response = await axios.get<TodayStatsResponse>(
+      `${API_URL}/today-stats`,
       getAxiosConfig()
     );
     return response.data;
