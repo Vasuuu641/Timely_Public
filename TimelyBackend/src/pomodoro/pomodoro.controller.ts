@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Req } from '@nestjs/common';
+import { Controller, Body, Post, Req, Get } from '@nestjs/common';
 import { PomodoroService } from './pomodoro.service';
 import { EndPomodoroSessionDto } from './dto/end-pomodoro-session.dto';
 import { StartBreakDto } from './dto/start-break.dto';
@@ -43,6 +43,12 @@ export class PomodoroController {
     async endSession(@Body() dto : EndPomodoroSessionDto, @CurrentUser() user : UserWithoutPassword)
     {
         return this.pomodoroService.endPomodoroSession(dto, user.id);
+    }
+
+    @Get('today-stats')
+    async getTodayStats(@CurrentUser() user : UserWithoutPassword)
+    {
+        return this.pomodoroService.getTodayStats(user.id);
     }
 
 }

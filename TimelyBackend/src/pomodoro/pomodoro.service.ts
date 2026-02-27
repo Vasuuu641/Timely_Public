@@ -138,9 +138,9 @@ export class PomodoroService {
 
   // Level constraints
   const levelConstraints = {
-    EASY: { requiredFocusMinutes: 30, maxBreaks: Infinity, maxBreakDuration: Infinity, maxTotalBreakMinutes: Infinity },
-    MEDIUM: { requiredFocusMinutes: 60, maxBreaks: 4, maxBreakDuration: 5, maxTotalBreakMinutes: 20 },
-    HARD: { requiredFocusMinutes: 120, maxBreaks: 2, maxBreakDuration: 20, maxTotalBreakMinutes: 40 },
+    EASY: { requiredFocusMinutes: 15, maxBreaks: Infinity, maxBreakDuration: Infinity, maxTotalBreakMinutes: Infinity },
+    MEDIUM: { requiredFocusMinutes: 25, maxBreaks: 4, maxBreakDuration: 5, maxTotalBreakMinutes: 20 },
+    HARD: { requiredFocusMinutes: 60, maxBreaks: 2, maxBreakDuration: 20, maxTotalBreakMinutes: 40 },
   };
 
   const constraints = levelConstraints[session.level];
@@ -213,6 +213,33 @@ export class PomodoroService {
     points: earnedPoints,
     complianceTier: tier.name,
     warnings,
+  };
+}
+
+async getTodayStats(userId: string) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  // Get all completed sessions for today
+  const sessionsToday = await this.prisma.pomodoroSession.findMany({
+    where: {
+      userId,
+      isCompleted: true,
+      createdAt: {
+        gte: today,
+        lt: tomorrow,
+      },
+    },
+  });
+
+  const pointsToday = sessionsToday.reduce((sum, session) => sum + session.pointsEarned, 0);
+  const sessionsCount = sessionsToday.length;
+
+  return {
+    pointsToday,
+    sessionsCompleted: sessionsCount,
   };
 }
 }

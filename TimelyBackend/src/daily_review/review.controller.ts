@@ -54,4 +54,10 @@ deleteReview(@Param('id') id : string, @CurrentUser() user : UserWithoutPassword
 {
   return this.dailyReviewService.deleteReview(+id, user.id);
 }
+
+@Get('summary/today')
+async getTodaySummary(@CurrentUser() user : UserWithoutPassword)
+{
+  return this.dailyReviewService.getTodaySummary(user.id);
+}
 }

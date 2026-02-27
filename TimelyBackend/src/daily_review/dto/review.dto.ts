@@ -8,7 +8,7 @@ export class CreateDailyReviewDto {
     date? : string;
 
     @IsString()
-    @Length(1, 500)
+    @Length(1, 5000)
 
     reflection : string;
 
@@ -28,7 +28,7 @@ export class UpdateDailyReviewDto {
 
     @IsOptional()
     @IsString()
-    @Length(1, 500)
+    @Length(1, 5000)
 
     reflection? : string;
 

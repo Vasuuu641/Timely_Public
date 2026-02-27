@@ -78,7 +78,7 @@ model Todo {
 model DailyReview {
   id         Int      @id @default(autoincrement())
   date       DateTime
-  reflection String
+  reflection String   @db.Text
   rating     Int?
 
   userId String
