@@ -12,7 +12,10 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "types": ["node"],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
