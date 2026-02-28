@@ -1,78 +1,64 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma" // Your custom output path
+  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "mysql" // <--- CHANGE THIS FROM "postgresql" TO "mysql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
-// ... (existing generator and datasource blocks) ...
 
 model User {
   id               String            @id @default(uuid())
   email            String            @unique
-  password         String // Store hashed passwords, NOT plain text!
+  password         String
   username         String            @unique
-  fullname         String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  schedules        ScheduleEntry[]
-  todos            Todo[]            @relation("UserTodos")
-  notes            Note[]
-  quizzes          Quiz[]
+  fullname         String?
   DailyReview      DailyReview[]
-  pomodoroSessions PomodoroSession[]
-  studyGoals       StudyGoal[]
   featureUsage     FeatureUsage[]
+  notes            Note[]
+  pomodoroSessions PomodoroSession[]
+  quizzes          Quiz[]
+  schedules        ScheduleEntry[]
+  studyGoals       StudyGoal[]
+  todos            Todo[]            @relation("UserTodos")
 }
 
 model ScheduleEntry {
   id          String    @id @default(uuid())
   title       String
-  notes       String?
   startTime   DateTime
   endTime     DateTime?
   topic       String?   @default("General")
   priority    String?   @default("Medium")
   status      String?   @default("ToDo")
   isDailyPlan Boolean   @default(false)
-  isRecurring Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  userId      String
+  isRecurring Boolean   @default(false)
+  notes       String?
+  user        User      @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([topic])
-}
-
-enum TodoPriority {
-  LOW
-  MEDIUM
-  HIGH
 }
 
 model Todo {
   id          Int          @id @default(autoincrement())
   title       String
   description String?
-  dueDate     DateTime?
-  priority    TodoPriority @default(MEDIUM)
   isCompleted Boolean      @default(false)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  userId      String
+  dueDate     DateTime?
+  priority    TodoPriority @default(MEDIUM)
+  user        User         @relation("UserTodos", fields: [userId], references: [id])
 
-  userId String
-  user   User   @relation("UserTodos", fields: [userId], references: [id])
+  @@index([userId], map: "Todo_userId_fkey")
 }
 
 model DailyReview {
@@ -80,55 +66,48 @@ model DailyReview {
   date       DateTime
   reflection String   @db.Text
   rating     Int?
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([date, userId])
+  @@index([userId], map: "DailyReview_userId_fkey")
 }
 
 model PomodoroSession {
-  id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
+  id                Int               @id @default(autoincrement())
+  userId            String
   level             PomodoroLevel
-  focusStart        DateTime // when the session began
-  focusEnd          DateTime? // when the session ended
-  breaks            Break[] // relation to the breaks taken
-  postSessionBreak  PostSessionBreak?
+  focusStart        DateTime
+  focusEnd          DateTime?
   pointsEarned      Int               @default(0)
   isCompleted       Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
   totalBreakMinutes Int?              @default(0)
+  breaks            Break[]
+  user              User              @relation(fields: [userId], references: [id])
+  postSessionBreak  PostSessionBreak?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum PomodoroLevel {
-  EASY
-  MEDIUM
-  HARD
+  @@index([userId], map: "PomodoroSession_userId_fkey")
 }
 
 model Break {
   id        Int             @id @default(autoincrement())
-  session   PomodoroSession @relation(fields: [sessionId], references: [id])
   sessionId Int
-
   startTime DateTime
   endTime   DateTime?
+  createdAt DateTime        @default(now())
+  session   PomodoroSession @relation(fields: [sessionId], references: [id])
 
-  createdAt DateTime @default(now())
+  @@index([sessionId], map: "Break_sessionId_fkey")
 }
 
 model PostSessionBreak {
   id        Int             @id @default(autoincrement())
-  session   PomodoroSession @relation(fields: [sessionId], references: [id])
   sessionId Int             @unique
-
   startTime DateTime
   endTime   DateTime?
+  session   PomodoroSession @relation(fields: [sessionId], references: [id])
 }
 
 model Category {
@@ -138,23 +117,20 @@ model Category {
 }
 
 model Note {
-  id      String @id @default(uuid())
-  title   String
-  content String @db.LongText
-
+  id         String    @id @default(uuid())
+  title      String
+  content    String    @db.LongText
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  tags NoteTag[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  category   Category  @relation(fields: [categoryId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  tags       NoteTag[]
 
   @@index([userId])
   @@index([userId, categoryId])
+  @@index([categoryId], map: "Note_categoryId_fkey")
 }
 
 model Tag {
@@ -166,48 +142,42 @@ model Tag {
 model NoteTag {
   noteId String
   tagId  String
-
-  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
-  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([noteId, tagId])
+  @@index([tagId], map: "NoteTag_tagId_fkey")
 }
 
 model Quiz {
   id            String   @id @default(uuid())
-  title         String
-  topic         String
-  question      String   @db.Text
-  options       String   @db.Text
-  correctAnswer String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id])
+  userId        String?
+  correctAnswer String
+  options       String   @db.Text
+  topic         String
+  question      String   @db.Text
+  title         String
+  user          User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([title])
 }
 
-enum GoalType {
-  NOTE
-  TASK
-  POMODORO
-  STUDY_HOURS
-}
-
 model StudyGoal {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
   type      GoalType
-  target    Int // target number of tasks, points, notes, etc.
-  notes     String
+  target    Int
   startDate DateTime
   endDate   DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  notes     String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "StudyGoal_userId_fkey")
 }
 
 model FeatureUsage {
@@ -216,8 +186,26 @@ model FeatureUsage {
   feature    String
   usageCount Int      @default(0)
   lastUsed   DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, feature])
+}
+
+enum TodoPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PomodoroLevel {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum GoalType {
+  NOTE
+  TASK
+  POMODORO
+  STUDY_HOURS
 }
