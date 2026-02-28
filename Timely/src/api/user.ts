@@ -3,7 +3,7 @@ export async function fetchCurrentUser() : Promise <{username : string}> {
 
     if(!token) throw new Error('No auth token found!');
 
-    const res = await fetch('http://localhost:3000/user/me', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

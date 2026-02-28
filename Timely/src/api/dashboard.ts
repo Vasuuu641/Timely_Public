@@ -1,7 +1,7 @@
 // src/api/dashboard.ts
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Mirror the backend response using frontend-safe interfaces
 export interface DashboardStats {
@@ -99,7 +99,7 @@ export const fetchDashboardData = async (): Promise<DashboardResponse> => {
       })),
       recentActivity: dashboardData.recentActivity.map(act => ({
         ...act,
-        createdAt: new Date(act.createdAt),
+        createdAt: parseDate((act as any).createdAt),
       })),
       goals: parsedGoals,
     };
