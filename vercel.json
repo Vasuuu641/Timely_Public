@@ -1,5 +1,5 @@
 {
-  "buildCommand": "ls -la && pwd",
+  "buildCommand": "pwd && ls -la",
   "outputDirectory": "Timely/dist",
   "installCommand": "echo 'skip'"
 }
