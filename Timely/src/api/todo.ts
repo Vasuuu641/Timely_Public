@@ -41,7 +41,7 @@ export const fetchTodos = async (): Promise<Todo[]> => {
     console.error('Fetch todos failed:', res.status, errorText);
     throw new Error(`Failed to fetch todos: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<Todo[]>;
 };
 
 export const createTodo = async (data: CreateTodoDto): Promise<Todo> => {
@@ -64,7 +64,7 @@ export const createTodo = async (data: CreateTodoDto): Promise<Todo> => {
     console.error('Create todo failed:', res.status, errorText);
     throw new Error(`Failed to create todo: ${res.status} - ${errorText}`);
   }
-  return res.json();
+  return res.json() as Promise<Todo>;
 };
 
 export const updateTodo = async (id: number, data: Partial<CreateTodoDto> & { isCompleted?: boolean }): Promise<Todo> => {
@@ -85,7 +85,7 @@ export const updateTodo = async (id: number, data: Partial<CreateTodoDto> & { is
     console.error('Update todo failed:', res.status, errorText);
     throw new Error(`Failed to update todo: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<Todo>;
 };
 
 export const deleteTodo = async (id: number): Promise<void> => {

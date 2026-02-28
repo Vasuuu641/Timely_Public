@@ -36,7 +36,7 @@ export const fetchNotes = async (): Promise<Note[]> => {
   });
   
   if (!res.ok) throw new Error("Failed to fetch notes");
-  return res.json();
+  return res.json() as Promise<Note[]>;
 };
 
 export const createNote = async (data: CreateNoteDto): Promise<Note> => {
@@ -67,7 +67,7 @@ export const createNote = async (data: CreateNoteDto): Promise<Note> => {
     console.error('Create note failed:', res.status, errorText);
     throw new Error(`Failed to create note: ${res.status} - ${errorText}`);
   }
-  return res.json();
+  return res.json() as Promise<Note>;
 };
 
 export const updateNote = async (id: string, data: Partial<CreateNoteDto>): Promise<Note> => {
@@ -98,7 +98,7 @@ export const updateNote = async (id: string, data: Partial<CreateNoteDto>): Prom
     console.error('Update note failed:', res.status, errorText);
     throw new Error(`Failed to update note: ${res.status} - ${errorText}`);
   }
-  return res.json();
+  return res.json() as Promise<Note>;
 };
 
 export const deleteNote = async (id: string): Promise<void> => {
@@ -126,7 +126,7 @@ export const fetchCategories = async (): Promise<Array<{ id: string; name: strin
   });
 
   if (!res.ok) throw new Error("Failed to fetch categories");
-  return res.json();
+  return res.json() as Promise<Array<{ id: string; name: string }>>;
 };
 
 export const createCategory = async (name: string): Promise<{ id: string; name: string }> => {
@@ -147,5 +147,5 @@ export const createCategory = async (name: string): Promise<{ id: string; name: 
     console.error('Create category failed:', res.status, errorText);
     throw new Error(`Failed to create category: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<{ id: string; name: string }>;
 };

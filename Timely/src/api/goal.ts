@@ -43,7 +43,7 @@ export const fetchStudyGoals = async (): Promise<StudyGoal[]> => {
 		throw new Error(`Failed to fetch goals: ${res.status}`);
 	}
 
-	return res.json();
+	return res.json() as Promise<StudyGoal[]>;
 };
 
 export const createStudyGoal = async (data: CreateGoalDto): Promise<StudyGoal> => {
@@ -59,7 +59,7 @@ export const createStudyGoal = async (data: CreateGoalDto): Promise<StudyGoal> =
 		throw new Error(`Failed to create goal: ${res.status}`);
 	}
 
-	return res.json();
+	return res.json() as Promise<StudyGoal>;
 };
 
 export const updateStudyGoal = async (id: string, data: UpdateGoalDto): Promise<StudyGoal> => {
@@ -75,7 +75,7 @@ export const updateStudyGoal = async (id: string, data: UpdateGoalDto): Promise<
 		throw new Error(`Failed to update goal: ${res.status}`);
 	}
 
-	return res.json();
+	return res.json() as Promise<StudyGoal>;
 };
 
 export const deleteStudyGoal = async (id: string): Promise<void> => {

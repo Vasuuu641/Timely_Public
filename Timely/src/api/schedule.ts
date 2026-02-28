@@ -42,7 +42,7 @@ export const fetchScheduleEntries = async (): Promise<ScheduleEntry[]> => {
     console.error('Fetch schedules failed:', res.status, errorText);
     throw new Error(`Failed to fetch schedules: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<ScheduleEntry[]>;
 };
 
 export const createScheduleEntry = async (data: CreateScheduleEntryDto): Promise<ScheduleEntry> => {
@@ -65,7 +65,7 @@ export const createScheduleEntry = async (data: CreateScheduleEntryDto): Promise
     console.error('Create schedule failed:', res.status, errorText);
     throw new Error(`Failed to create schedule: ${res.status} - ${errorText}`);
   }
-  return res.json();
+  return res.json() as Promise<ScheduleEntry>;
 };
 
 export const updateScheduleEntry = async (id: string, data: Partial<CreateScheduleEntryDto>): Promise<ScheduleEntry> => {
@@ -86,7 +86,7 @@ export const updateScheduleEntry = async (id: string, data: Partial<CreateSchedu
     console.error('Update schedule failed:', res.status, errorText);
     throw new Error(`Failed to update schedule: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<ScheduleEntry>;
 };
 
 export const deleteScheduleEntry = async (id: string): Promise<void> => {

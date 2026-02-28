@@ -37,7 +37,7 @@ export const fetchAllQuizzes = async (): Promise<Quiz[]> => {
     console.error('Fetch quizzes failed:', res.status, errorText);
     throw new Error(`Failed to fetch quizzes: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<Quiz[]>;
 };
 
 export const fetchQuiz = async (id: string): Promise<Quiz> => {
@@ -55,7 +55,7 @@ export const fetchQuiz = async (id: string): Promise<Quiz> => {
     console.error('Fetch quiz failed:', res.status, errorText);
     throw new Error(`Failed to fetch quiz: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<Quiz>;
 };
 
 export const createQuiz = async (data: CreateQuizDto): Promise<Quiz> => {
@@ -76,7 +76,7 @@ export const createQuiz = async (data: CreateQuizDto): Promise<Quiz> => {
     console.error('Create quiz failed:', res.status, errorText);
     throw new Error(`Failed to create quiz: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<Quiz>;
 };
 
 export const updateQuiz = async (id: string, data: UpdateQuizDto): Promise<Quiz> => {
@@ -97,7 +97,7 @@ export const updateQuiz = async (id: string, data: UpdateQuizDto): Promise<Quiz>
     console.error('Update quiz failed:', res.status, errorText);
     throw new Error(`Failed to update quiz: ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<Quiz>;
 };
 
 export const deleteQuiz = async (id: string): Promise<void> => {

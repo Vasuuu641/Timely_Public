@@ -15,6 +15,6 @@ export async function fetchCurrentUser() : Promise <{username : string}> {
 
     console.log('Status:', res.status);
 
-    const data = await res.json();
+    const data = await res.json() as {username: string};
     return {username: data.username};
 }
