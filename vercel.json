@@ -1,5 +1,6 @@
 {
   "buildCommand": "npm install && npm run build",
   "outputDirectory": "dist",
-  "installCommand": "echo 'skip'"
+  "installCommand": "echo 'skip'",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
