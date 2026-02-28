@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pwd && ls -la",
-  "outputDirectory": "Timely/dist",
+  "buildCommand": "npm install && npm run build",
+  "outputDirectory": "dist",
   "installCommand": "echo 'skip'"
 }
