@@ -25,7 +25,7 @@ export type CreateScheduleEntryDto = {
   topic?: string;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchScheduleEntries = async (): Promise<ScheduleEntry[]> => {
   const token = localStorage.getItem('token');

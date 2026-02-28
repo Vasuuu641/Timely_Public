@@ -23,7 +23,7 @@ export type CreateNoteDto = {
   tags?: string[]; // array of tag names
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchNotes = async (): Promise<Note[]> => {
   const token = localStorage.getItem('token');

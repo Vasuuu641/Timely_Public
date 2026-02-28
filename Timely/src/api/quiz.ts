@@ -20,7 +20,7 @@ export type CreateQuizDto = {
 
 export type UpdateQuizDto = Partial<CreateQuizDto>;
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchAllQuizzes = async (): Promise<Quiz[]> => {
   const token = localStorage.getItem('token');
