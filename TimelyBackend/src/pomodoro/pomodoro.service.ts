@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePomodoroSessionDto } from './dto/create-pomodoro-session.dto';
 import { EndBreakDto } from './dto/end-break.dto';
 import { StartBreakDto } from './dto/start-break.dto';

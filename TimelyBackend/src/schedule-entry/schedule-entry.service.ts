@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateScheduleEntryDto } from './dto/create-scheduleentry.dto';
 import { UpdateScheduleEntryDto } from './dto/update-scheduleentry.dto';
 

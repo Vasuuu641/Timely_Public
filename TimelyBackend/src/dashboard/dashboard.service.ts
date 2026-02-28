@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { DashboardResponseDto } from "./dto/dashboard-response.dto";
 import { DashboardStatsDto } from "./dto/dashboard-stats.dto";
 import { RecentActivityDto } from "./dto/recent-activity.dto";
