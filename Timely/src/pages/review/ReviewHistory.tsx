@@ -63,6 +63,11 @@ const ReviewHistory = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
+  const formatDateForInput = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
+
   const getMoodEmoji = (rating: number | null) => {
     if (rating === 3) return "😊";
     if (rating === 2) return "😐";
@@ -79,7 +84,7 @@ const ReviewHistory = () => {
 
   const handleEdit = (review: DailyReview) => {
     setEditingId(review.id);
-    setEditDate(review.date);
+    setEditDate(formatDateForInput(review.date));
     setEditReflection(review.reflection);
     setEditRating(review.rating);
   };
@@ -98,8 +103,7 @@ const ReviewHistory = () => {
     }
 
     try {
-      const updateData: { date?: string; reflection: string; rating?: number } = {
-        date: editDate,
+      const updateData: { reflection: string; rating?: number } = {
         reflection: editReflection,
       };
       
@@ -203,6 +207,23 @@ const ReviewHistory = () => {
 
                   {editingId === review.id ? (
                     <div className="edit-form">
+                      <div style={{ marginBottom: "1rem" }}>
+                        <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "bold" }}>
+                          Date:
+                        </label>
+                        <input
+                          type="date"
+                          value={editDate}
+                          onChange={(e) => setEditDate(e.target.value)}
+                          style={{
+                            width: "100%",
+                            padding: "0.5rem",
+                            borderRadius: "4px",
+                            border: "1px solid #ccc",
+                            fontSize: "1rem",
+                          }}
+                        />
+                      </div>
                       <div className="edit-mood">
                         <label>Mood:</label>
                         <div className="mood-buttons">
@@ -252,29 +273,6 @@ const ReviewHistory = () => {
                       <p>{review.reflection}</p>
                     </div>
                   )}
-
-                <div className="review-meta">
-                  <span>
-                    Created: {new Date(review.createdAt).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}
-                  </span>
-                  {review.updatedAt !== review.createdAt && (
-                    <span>
-                      Updated: {new Date(review.updatedAt).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                      })}
-                    </span>
-                  )}
-                </div>
                 </div>
               ))}
             </div>
