@@ -120,7 +120,7 @@ export const getReviewHistory = async (
 ): Promise<DailyReview[]> => {
   try {
     const response = await axios.get<DailyReview[]>(
-      `${API_URL}/history?skip=${skip}&take=${take}`,
+      `${API_URL}/review/history?skip=${skip}&take=${take}`,
       getAxiosConfig()
     );
     return response.data;
@@ -132,7 +132,7 @@ export const getReviewHistory = async (
 export const deleteReview = async (id: number): Promise<void> => {
   try {
     await axios.delete(
-      `${API_URL}/${id}`,
+      `${API_URL}/review/${id}`,
       getAxiosConfig()
     );
   } catch (error: any) {
