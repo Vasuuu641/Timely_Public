@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, UsePipes, ValidationPipe, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UsePipes, ValidationPipe, NotFoundException, Put, UseGuards, ConflictException } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Prisma, User } from 'generated/prisma';
+import { User } from 'generated/prisma';
 import { UserWithoutPassword } from './type/user-without-password.type';
-import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { UpdateUserDto } from './dto/UpdateUserDto';
@@ -19,8 +18,9 @@ async create(@Body() dto: CreateUserDto) {
     const user = await this.userService.createUser(dto);
     return { message: 'User created successfully', user }; // optional
   } catch (err: any) {
-    if (err.code === 'P2002') { // Prisma unique constraint violation
-      return { message: 'Email or username already exists' };
+    if (err.code === 'P2002') {
+      // Bug fix: was returning 200 with a message, now throws a proper 409
+      throw new ConflictException('Email or username already exists');
     }
     throw err;
   }

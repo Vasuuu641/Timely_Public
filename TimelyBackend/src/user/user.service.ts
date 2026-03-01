@@ -12,6 +12,7 @@ const userSelect = {
   email: true,
   username: true,
   fullname: true,
+  refreshToken: true,
   createdAt: true,
   updatedAt: true,
   // Do NOT include 'password: true' here

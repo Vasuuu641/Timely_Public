@@ -16,6 +16,7 @@ model User {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   fullname         String?
+  refreshToken     String?           @db.Text
   DailyReview      DailyReview[]
   featureUsage     FeatureUsage[]
   notes            Note[]
