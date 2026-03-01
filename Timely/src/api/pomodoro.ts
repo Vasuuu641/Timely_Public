@@ -75,7 +75,7 @@ export const createPomodoroSession = async (
 ): Promise<CreateSessionResponse> => {
   try {
     const response = await axios.post<CreateSessionResponse>(
-      `${API_URL}pomodoro/start`,
+      `${API_URL}/pomodoro/start`,
       { level },
       getAxiosConfig()
     );
@@ -88,7 +88,7 @@ export const createPomodoroSession = async (
 export const startBreak = async (sessionId: number): Promise<StartBreakResponse> => {
   try {
     const response = await axios.post<StartBreakResponse>(
-      `${API_URL}pomodoro/start-break`,
+      `${API_URL}/pomodoro/start-break`,
       { sessionId },
       getAxiosConfig()
     );
@@ -101,7 +101,7 @@ export const startBreak = async (sessionId: number): Promise<StartBreakResponse>
 export const endBreak = async (breakId: number): Promise<EndBreakResponse> => {
   try {
     const response = await axios.post<EndBreakResponse>(
-      `${API_URL}pomodoro/end-break`,
+      `${API_URL}/pomodoro/end-break`,
       { breakId },
       getAxiosConfig()
     );
@@ -116,7 +116,7 @@ export const endPomodoroSession = async (
 ): Promise<EndSessionResponse> => {
   try {
     const response = await axios.post<EndSessionResponse>(
-      `${API_URL}pomodoro/end`,
+      `${API_URL}/pomodoro/end`,
       { sessionId },
       getAxiosConfig()
     );
@@ -128,7 +128,7 @@ export const endPomodoroSession = async (
 export const getTodayStats = async (): Promise<TodayStatsResponse> => {
   try {
     const response = await axios.get<TodayStatsResponse>(
-      `${API_URL}pomodoro/today-stats`,
+      `${API_URL}/pomodoro/today-stats`,
       getAxiosConfig()
     );
     return response.data;
