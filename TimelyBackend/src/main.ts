@@ -12,7 +12,7 @@ async function bootstrap() {
     // 'origin' specifies which domains are allowed to access your backend API.
     // It's the most critical setting.
     // For local development, allow your React frontend's URL:
-    origin: 'http://localhost:5173', // <<< IMPORTANT: Replace with your React frontend's actual URL if different
+    origin: 'https://timely-public.vercel.app', // <<< IMPORTANT: Replace with your React frontend's actual URL if different
 
     // 'methods' defines which HTTP methods (GET, POST, PUT, DELETE, etc.) are allowed.
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
