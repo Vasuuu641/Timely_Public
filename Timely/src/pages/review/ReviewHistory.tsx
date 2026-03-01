@@ -17,6 +17,7 @@ const ReviewHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [editDate, setEditDate] = useState("");
   const [editReflection, setEditReflection] = useState("");
   const [editRating, setEditRating] = useState<number | null>(null);
   const [skip, setSkip] = useState(0);
@@ -78,12 +79,14 @@ const ReviewHistory = () => {
 
   const handleEdit = (review: DailyReview) => {
     setEditingId(review.id);
+    setEditDate(review.date);
     setEditReflection(review.reflection);
     setEditRating(review.rating);
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
+    setEditDate("");
     setEditReflection("");
     setEditRating(null);
   };
@@ -95,7 +98,8 @@ const ReviewHistory = () => {
     }
 
     try {
-      const updateData: { reflection: string; rating?: number } = {
+      const updateData: { date?: string; reflection: string; rating?: number } = {
+        date: editDate,
         reflection: editReflection,
       };
       
@@ -109,6 +113,7 @@ const ReviewHistory = () => {
         prev.map((r) => (r.id === id ? updated : r))
       );
       setEditingId(null);
+      setEditDate("");
       setEditReflection("");
       setEditRating(null);
     } catch (err: any) {
