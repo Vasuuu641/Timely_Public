@@ -63,7 +63,7 @@ const getAxiosConfig = () => {
 export const getTodaySummary = async (): Promise<TodaySummary> => {
   try {
     const response = await axios.get<TodaySummary>(
-      `${API_URL}/summary/today`,
+      `${API_URL}review/summary/today`,
       getAxiosConfig()
     );
     return response.data;
