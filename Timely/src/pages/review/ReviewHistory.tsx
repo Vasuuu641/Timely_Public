@@ -253,16 +253,28 @@ const ReviewHistory = () => {
                     </div>
                   )}
 
-                  <div className="review-meta">
+                <div className="review-meta">
+                  <span>
+                    Created: {new Date(review.createdAt).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}
+                  </span>
+                  {review.updatedAt !== review.createdAt && (
                     <span>
-                      Created: {new Date(review.createdAt).toLocaleString()}
+                      Updated: {new Date(review.updatedAt).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      })}
                     </span>
-                    {review.updatedAt !== review.createdAt && (
-                      <span>
-                        Updated: {new Date(review.updatedAt).toLocaleString()}
-                      </span>
-                    )}
-                  </div>
+                  )}
+                </div>
                 </div>
               ))}
             </div>
