@@ -75,7 +75,7 @@ export const getTodaySummary = async (): Promise<TodaySummary> => {
 export const getTodayReview = async (): Promise<DailyReview> => {
   try {
     const response = await axios.get<DailyReview>(
-      `${API_URL}/today`,
+      `${API_URL}review/today`,
       getAxiosConfig()
     );
     return response.data;
@@ -87,7 +87,7 @@ export const getTodayReview = async (): Promise<DailyReview> => {
 export const createReview = async (dto: CreateReviewDto): Promise<DailyReview> => {
   try {
     const response = await axios.post<DailyReview>(
-      API_URL,
+      `${API_URL}review`,
       dto,
       getAxiosConfig()
     );
@@ -103,7 +103,7 @@ export const updateReview = async (
 ): Promise<DailyReview> => {
   try {
     const response = await axios.patch<DailyReview>(
-      `${API_URL}/${id}`,
+      `${API_URL}review/${id}`,
       dto,
       getAxiosConfig()
     );
