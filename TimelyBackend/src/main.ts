@@ -9,19 +9,13 @@ async function bootstrap() {
 
   // --- START CORS CONFIGURATION ---
   app.enableCors({
-    // 'origin' specifies which domains are allowed to access your backend API.
-    // It's the most critical setting.
-    // For local development, allow your React frontend's URL:
-    origin: 'https://timely-public.vercel.app', // <<< IMPORTANT: Replace with your React frontend's actual URL if different
-
-    // 'methods' defines which HTTP methods (GET, POST, PUT, DELETE, etc.) are allowed.
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-
-    // 'credentials' indicates whether the browser should send cookies or HTTP authentication
-    // headers (like Authorization headers for JWTs) with cross-origin requests.
-    // Set to `true` if your frontend will be sending authentication tokens (e.g., JWTs).
-    credentials: true,
-  });
+  origin: [
+    'http://localhost:5173',
+    'https://timely-public.vercel.app',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  credentials: true,
+});
   // --- END CORS CONFIGURATION ---
 
   // Enable global DTO validation pipes (as discussed in previous steps)
